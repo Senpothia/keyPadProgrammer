@@ -10,15 +10,20 @@ import java.awt.Font;
 import java.awt.color.ColorSpace;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButtonMenuItem;
 
 /**
  *
  * @author Michel
  */
-public class Interface extends javax.swing.JFrame {
+public class Interface extends javax.swing.JFrame implements Observer {
 
     private File programmerLocation = null;
     private File binaryLocation = null;
@@ -26,15 +31,27 @@ public class Interface extends javax.swing.JFrame {
     private String hexLocation = null;
     private boolean envVariable = false;
 
+    Connecteur connecteur = getConnecteur();            // gére la connexion RS232
+    Controller controller = new Controller();           // gére le déroulement du test
+
+    private int baudeRate = 9600;
+    private int numDatabits = 8;
+    private int parity = 0;
+    private int stopBits = 1;
+    private int newReadTimeout = 1000;
+    private int newWriteTimeout = 0;
+
+    private boolean connexionRS232Active = false;       // état de la connexion RS-232
+
     /**
      * Creates new form Interface
      */
     public Interface() {
 
         initComponents();
-        comFlag.setBackground(Color.RED);
-        comFlag.setForeground(Color.RED);
-        comFlag.setOpaque(true);
+        statutRs232.setBackground(Color.RED);
+        statutRs232.setForeground(Color.RED);
+        statutRs232.setOpaque(true);
         this.getContentPane().setBackground(new Color(83, 141, 163));
         voyant.setBackground(new Color(204, 136, 53));
         voyant.setForeground(Color.GRAY);
@@ -42,12 +59,25 @@ public class Interface extends javax.swing.JFrame {
         console.setBackground(new Color(247, 242, 208));
         console.setOpaque(true);
         console.setForeground(Color.red);
+        console.setFont(new Font("Serif", Font.PLAIN, 20));
 
         paramsWin.getContentPane().setBackground(new Color(83, 141, 163));
         progLocLabel.setBackground(new Color(247, 242, 208));
         binaryLocLabel.setBackground(new Color(247, 242, 208));
         progLocLabel.setOpaque(true);
         binaryLocLabel.setOpaque(true);
+
+        List<JRadioButtonMenuItem> listePorts = new ArrayList<JRadioButtonMenuItem>();
+
+        List<String> listePortString = connecteur.getListPorts();
+
+        for (String p : listePortString) {
+
+            JRadioButtonMenuItem m = new JRadioButtonMenuItem(p);
+            groupPorts.add(m);
+            m.addActionListener(new PortSupplier());
+            menuPort.add(m);
+        }
 
         testParamsProg();
 
@@ -66,6 +96,11 @@ public class Interface extends javax.swing.JFrame {
         btnSelectLocationProg = new javax.swing.JButton();
         btnSelectBinaryLoc = new javax.swing.JButton();
         binaryLoc = new javax.swing.JFileChooser();
+        groupPorts = new javax.swing.ButtonGroup();
+        groupBits = new javax.swing.ButtonGroup();
+        groupBaud = new javax.swing.ButtonGroup();
+        groupParity = new javax.swing.ButtonGroup();
+        groupStop = new javax.swing.ButtonGroup();
         paramsWin = new javax.swing.JFrame();
         titreParamsWin = new javax.swing.JLabel();
         progLocLabel = new javax.swing.JLabel();
@@ -80,19 +115,41 @@ public class Interface extends javax.swing.JFrame {
         btnProg = new javax.swing.JButton();
         btnEffacer = new javax.swing.JButton();
         voyant = new javax.swing.JLabel();
-        comFlag = new javax.swing.JLabel();
+        statutRs232 = new javax.swing.JLabel();
         console = new javax.swing.JLabel();
         btnTester = new javax.swing.JButton();
         version = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        menuParametres = new javax.swing.JMenu();
         menuVoir = new javax.swing.JMenuItem();
         paramsProg = new javax.swing.JMenuItem();
         paramBinaire = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         btnFermer = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        menuConnexion = new javax.swing.JMenu();
+        menuPort = new javax.swing.JMenu();
+        menuBaud = new javax.swing.JMenu();
+        baud9600 = new javax.swing.JRadioButtonMenuItem();
+        baud19200 = new javax.swing.JRadioButtonMenuItem();
+        baud38400 = new javax.swing.JRadioButtonMenuItem();
+        baud115200 = new javax.swing.JRadioButtonMenuItem();
+        menuBits = new javax.swing.JMenu();
+        bits6 = new javax.swing.JRadioButtonMenuItem();
+        bits7 = new javax.swing.JRadioButtonMenuItem();
+        bits8 = new javax.swing.JRadioButtonMenuItem();
+        bits9 = new javax.swing.JRadioButtonMenuItem();
+        menuStop = new javax.swing.JMenu();
+        stop1 = new javax.swing.JRadioButtonMenuItem();
+        stop2 = new javax.swing.JRadioButtonMenuItem();
+        menuParity = new javax.swing.JMenu();
+        parityNone = new javax.swing.JRadioButtonMenuItem();
+        parityOdd = new javax.swing.JRadioButtonMenuItem();
+        parityEven = new javax.swing.JRadioButtonMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        btnConnexion = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        btnDeconnexion = new javax.swing.JMenuItem();
         menuAide = new javax.swing.JMenu();
         voirAide = new javax.swing.JMenuItem();
 
@@ -115,6 +172,7 @@ public class Interface extends javax.swing.JFrame {
             }
         });
 
+        paramsWin.setTitle("Programmateur keypad - Paramètres système");
         paramsWin.setMinimumSize(new java.awt.Dimension(600, 400));
 
         titreParamsWin.setBackground(new java.awt.Color(153, 153, 255));
@@ -209,6 +267,7 @@ public class Interface extends javax.swing.JFrame {
                 .addGap(27, 27, 27))
         );
 
+        aide.setTitle("Programmateur keypad - Aide");
         aide.setMinimumSize(new java.awt.Dimension(600, 600));
 
         btnFermerAide.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -238,6 +297,7 @@ public class Interface extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Programmateur keypad");
 
         titre.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         titre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -269,7 +329,7 @@ public class Interface extends javax.swing.JFrame {
 
         voyant.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        comFlag.setText("jLabel4");
+        statutRs232.setText("jLabel4");
 
         console.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         console.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -290,10 +350,14 @@ public class Interface extends javax.swing.JFrame {
 
         version.setText("V1.0");
 
-        jMenu1.setText("Paramètres");
-        jMenu1.addActionListener(new java.awt.event.ActionListener() {
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("RS-232");
+
+        menuParametres.setText("Paramètres");
+        menuParametres.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu1ActionPerformed(evt);
+                menuParametresActionPerformed(evt);
             }
         });
 
@@ -303,7 +367,7 @@ public class Interface extends javax.swing.JFrame {
                 menuVoirActionPerformed(evt);
             }
         });
-        jMenu1.add(menuVoir);
+        menuParametres.add(menuVoir);
 
         paramsProg.setText("Programmateur");
         paramsProg.addActionListener(new java.awt.event.ActionListener() {
@@ -311,7 +375,7 @@ public class Interface extends javax.swing.JFrame {
                 paramsProgActionPerformed(evt);
             }
         });
-        jMenu1.add(paramsProg);
+        menuParametres.add(paramsProg);
 
         paramBinaire.setText("Binaire");
         paramBinaire.addActionListener(new java.awt.event.ActionListener() {
@@ -319,8 +383,8 @@ public class Interface extends javax.swing.JFrame {
                 paramBinaireActionPerformed(evt);
             }
         });
-        jMenu1.add(paramBinaire);
-        jMenu1.add(jSeparator1);
+        menuParametres.add(paramBinaire);
+        menuParametres.add(jSeparator1);
 
         btnFermer.setText("Fermer");
         btnFermer.addActionListener(new java.awt.event.ActionListener() {
@@ -328,16 +392,106 @@ public class Interface extends javax.swing.JFrame {
                 btnFermerActionPerformed(evt);
             }
         });
-        jMenu1.add(btnFermer);
+        menuParametres.add(btnFermer);
 
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(menuParametres);
 
-        jMenu2.setText("Communication");
+        menuConnexion.setText("Communication");
 
-        jMenuItem1.setText("Connexion");
-        jMenu2.add(jMenuItem1);
+        menuPort.setText("Ports");
+        menuConnexion.add(menuPort);
 
-        jMenuBar1.add(jMenu2);
+        menuBaud.setText("Baud");
+
+        groupBaud.add(baud9600);
+        baud9600.setSelected(true);
+        baud9600.setText("9600");
+        menuBaud.add(baud9600);
+
+        groupBaud.add(baud19200);
+        baud19200.setText("19200");
+        menuBaud.add(baud19200);
+
+        groupBaud.add(baud38400);
+        baud38400.setText("38400");
+        menuBaud.add(baud38400);
+
+        groupBaud.add(baud115200);
+        baud115200.setText("115200");
+        menuBaud.add(baud115200);
+
+        menuConnexion.add(menuBaud);
+
+        menuBits.setText("Bits");
+
+        groupBits.add(bits6);
+        bits6.setSelected(true);
+        bits6.setText("6");
+        menuBits.add(bits6);
+
+        groupBits.add(bits7);
+        bits7.setText("7");
+        menuBits.add(bits7);
+
+        groupBits.add(bits8);
+        bits8.setText("8");
+        menuBits.add(bits8);
+
+        groupBits.add(bits9);
+        bits9.setText("9");
+        menuBits.add(bits9);
+
+        menuConnexion.add(menuBits);
+
+        menuStop.setText("Stop");
+
+        groupStop.add(stop1);
+        stop1.setSelected(true);
+        stop1.setText("1");
+        menuStop.add(stop1);
+
+        groupStop.add(stop2);
+        stop2.setText("2");
+        menuStop.add(stop2);
+
+        menuConnexion.add(menuStop);
+
+        menuParity.setText("Parity");
+
+        groupParity.add(parityNone);
+        parityNone.setSelected(true);
+        parityNone.setText("None");
+        menuParity.add(parityNone);
+
+        groupParity.add(parityOdd);
+        parityOdd.setText("Odd");
+        menuParity.add(parityOdd);
+
+        groupParity.add(parityEven);
+        parityEven.setText("Even");
+        menuParity.add(parityEven);
+
+        menuConnexion.add(menuParity);
+        menuConnexion.add(jSeparator2);
+
+        btnConnexion.setText("Connexion");
+        btnConnexion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConnexionActionPerformed(evt);
+            }
+        });
+        menuConnexion.add(btnConnexion);
+        menuConnexion.add(jSeparator3);
+
+        btnDeconnexion.setText("Déconnexion");
+        btnDeconnexion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeconnexionActionPerformed(evt);
+            }
+        });
+        menuConnexion.add(btnDeconnexion);
+
+        jMenuBar1.add(menuConnexion);
 
         menuAide.setText("Autres");
         menuAide.addActionListener(new java.awt.event.ActionListener() {
@@ -385,18 +539,22 @@ public class Interface extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(comFlag, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(version)
-                        .addGap(22, 22, 22))))
+                        .addGap(22, 22, 22))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(statutRs232, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(36, 36, 36))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(comFlag, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addGap(32, 32, 32)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(statutRs232, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(3, 3, 3)
                 .addComponent(titre, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
                 .addComponent(voyant, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -411,7 +569,7 @@ public class Interface extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(57, 57, 57)
                         .addComponent(console, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
                         .addComponent(version)
                         .addGap(19, 19, 19))))
         );
@@ -564,7 +722,7 @@ public class Interface extends javax.swing.JFrame {
     }//GEN-LAST:event_menuVoirActionPerformed
 
     private void btnTesterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTesterActionPerformed
-        // TODO add your handling code here:
+        connecteur.envoyerData("W:START");
     }//GEN-LAST:event_btnTesterActionPerformed
 
     private void menuAideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAideActionPerformed
@@ -582,9 +740,9 @@ public class Interface extends javax.swing.JFrame {
         aide.setVisible(true);
     }//GEN-LAST:event_voirAideActionPerformed
 
-    private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
+    private void menuParametresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuParametresActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenu1ActionPerformed
+    }//GEN-LAST:event_menuParametresActionPerformed
 
     private void EnvVarBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnvVarBoxActionPerformed
         // TODO add your handling code here:
@@ -608,6 +766,45 @@ public class Interface extends javax.swing.JFrame {
 
         }
     }//GEN-LAST:event_EnvVarBoxStateChanged
+
+    private void btnConnexionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnexionActionPerformed
+
+        int i = connecteur.makeConnection(Connecteur.portName, baudeRate, numDatabits, parity, stopBits);
+        if (i == 99) {
+
+            console.setForeground(Color.BLUE);
+            console.setText("Connexion réussie");
+            setStatusRS232(true);
+            btnConnexion.setEnabled(false);
+            btnDeconnexion.setEnabled(true);
+            connexionRS232Active = true;
+
+        } else {
+
+            console.setForeground(Color.red);
+            console.setText("Tentative de connexion échouée");
+            setStatusRS232(false);
+
+        }
+
+        setEnabledMenusConfiguration();
+
+    }//GEN-LAST:event_btnConnexionActionPerformed
+
+    private void btnDeconnexionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeconnexionActionPerformed
+
+        int i = connecteur.disconnect();
+        if (i == 0) {
+            console.setForeground(Color.BLUE);
+            console.setText("Déconnexion réussie");
+            setStatusRS232(false);
+            btnConnexion.setEnabled(true);
+            btnDeconnexion.setEnabled(false);
+            connexionRS232Active = false;
+            setEnabledMenusConfiguration();
+
+        }
+    }//GEN-LAST:event_btnDeconnexionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -647,8 +844,18 @@ public class Interface extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox EnvVarBox;
     private javax.swing.JFrame aide;
+    private javax.swing.JRadioButtonMenuItem baud115200;
+    private javax.swing.JRadioButtonMenuItem baud19200;
+    private javax.swing.JRadioButtonMenuItem baud38400;
+    private javax.swing.JRadioButtonMenuItem baud9600;
     private javax.swing.JFileChooser binaryLoc;
     private javax.swing.JLabel binaryLocLabel;
+    private javax.swing.JRadioButtonMenuItem bits6;
+    private javax.swing.JRadioButtonMenuItem bits7;
+    private javax.swing.JRadioButtonMenuItem bits8;
+    private javax.swing.JRadioButtonMenuItem bits9;
+    private javax.swing.JMenuItem btnConnexion;
+    private javax.swing.JMenuItem btnDeconnexion;
     private javax.swing.JButton btnEffacer;
     private javax.swing.JMenuItem btnFermer;
     private javax.swing.JButton btnFermerAide;
@@ -657,20 +864,37 @@ public class Interface extends javax.swing.JFrame {
     private javax.swing.JButton btnSelectBinaryLoc;
     private javax.swing.JButton btnSelectLocationProg;
     private javax.swing.JButton btnTester;
-    private javax.swing.JLabel comFlag;
     private javax.swing.JLabel console;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
+    private javax.swing.ButtonGroup groupBaud;
+    private javax.swing.ButtonGroup groupBits;
+    private javax.swing.ButtonGroup groupParity;
+    private javax.swing.ButtonGroup groupPorts;
+    private javax.swing.ButtonGroup groupStop;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JMenu menuAide;
+    private javax.swing.JMenu menuBaud;
+    private javax.swing.JMenu menuBits;
+    private javax.swing.JMenu menuConnexion;
+    private javax.swing.JMenu menuParametres;
+    private javax.swing.JMenu menuParity;
+    private javax.swing.JMenu menuPort;
+    private javax.swing.JMenu menuStop;
     private javax.swing.JMenuItem menuVoir;
     private javax.swing.JMenuItem paramBinaire;
     private javax.swing.JMenuItem paramsProg;
     private javax.swing.JFrame paramsWin;
+    private javax.swing.JRadioButtonMenuItem parityEven;
+    private javax.swing.JRadioButtonMenuItem parityNone;
+    private javax.swing.JRadioButtonMenuItem parityOdd;
     private javax.swing.JLabel progLocLabel;
     private javax.swing.JFileChooser programmerLoc;
+    private javax.swing.JLabel statutRs232;
+    private javax.swing.JRadioButtonMenuItem stop1;
+    private javax.swing.JRadioButtonMenuItem stop2;
     private javax.swing.JLabel titre;
     private javax.swing.JLabel titreLabHex;
     private javax.swing.JLabel titreLabProg;
@@ -728,10 +952,59 @@ public class Interface extends javax.swing.JFrame {
             }
 
         }
+
+        if (connexionRS232Active) {
+
+            statutRs232.setBackground(Color.GREEN);
+            btnDeconnexion.setEnabled(true);
+            btnConnexion.setEnabled(false);
+
+        } else {
+
+            statutRs232.setBackground(Color.red);
+            btnDeconnexion.setEnabled(false);
+            btnConnexion.setEnabled(true);
+        }
     }
 
     public void montrerError(String message, String titre) {
 
         JOptionPane.showMessageDialog(this, message, titre, JOptionPane.ERROR_MESSAGE);
     }
+
+    private Connecteur getConnecteur() {
+
+        if (this.connecteur == null) {
+            this.connecteur = new Connecteur();
+            this.connecteur.addObserver(this);
+        }
+        return this.connecteur;
+
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+
+        String inputLine = (String) arg;
+        console.setText(inputLine);
+
+    }
+
+    private void setEnabledMenusConfiguration() {
+
+    }
+
+    private void setStatusRS232(boolean statut) {
+
+        if (statut) {
+
+            statutRs232.setForeground(Color.GREEN);
+            statutRs232.setBackground(Color.GREEN);
+        } else {
+            statutRs232.setForeground(Color.RED);
+            statutRs232.setBackground(Color.RED);
+        }
+
+    }
+
 }
