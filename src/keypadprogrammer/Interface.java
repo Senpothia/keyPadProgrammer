@@ -1136,7 +1136,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
         if (active) {
 
-            btnTester.setText("Acquitter");
+            btnTester.setText("ACQ");
             btnTester.setEnabled(false);
             btnTester.setBackground(Color.GRAY);
 
@@ -1144,13 +1144,13 @@ public class Interface extends javax.swing.JFrame implements Observer {
             btnProg.setBackground(new Color(163, 194, 240));
             btnProg.setEnabled(true);
 
-            btnEffacer.setText("Non OK");
+            btnEffacer.setText("NON OK");
             btnEffacer.setBackground(new Color(163, 194, 240));
             btnEffacer.setEnabled(true);
 
         } else {
 
-            btnTester.setText("Acquitter");
+            btnTester.setText("ACQ");
             btnTester.setEnabled(false);
             btnTester.setBackground(Color.GRAY);
 
@@ -1158,7 +1158,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
             btnProg.setBackground(new Color(163, 194, 240));
             btnProg.setEnabled(false);
 
-            btnEffacer.setText("Non OK");
+            btnEffacer.setText("NON OK");
             btnEffacer.setBackground(new Color(163, 194, 240));
             btnEffacer.setEnabled(false);
 
@@ -1170,7 +1170,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
         if (active) {
 
-            btnTester.setText("Acquitter");
+            btnTester.setText("ACQ");
             btnTester.setEnabled(true);
             btnTester.setBackground(new Color(163, 194, 240));
 
@@ -1181,7 +1181,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
         } else {
 
-            btnTester.setText("Acquitter");
+            btnTester.setText("ACQ");
             btnTester.setEnabled(false);
 
         }
