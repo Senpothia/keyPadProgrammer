@@ -10,7 +10,18 @@ package keypadprogrammer;
  * @author Michel
  */
 public class Constants {
-
-    static String NEW ="W:NEW";
     
+  
+    static String START = "1";
+    static String AQC = "4";
+    static String OK = "2";
+    static String KO = "3";
+    
+    static String RESPONSE = "@:ACQ";
+    static String FIN = "@:END";
+    static String ERREUR = "@:ERROR:";
+    static String INTERROGATION = "@INTER:";
+    static String CONFORME = "@:OK";
+    static String DEFAUT = "@:KO";
+
 }

@@ -217,7 +217,7 @@ public class Connecteur extends Observable {
 
     void resetTestBoard() {
 
-        envoyerData(Constants.NEW);
+      
 
     }
 
