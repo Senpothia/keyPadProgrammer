@@ -1215,10 +1215,20 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
             }
 
+            if (inputLine.trim().startsWith("-> FIN TEST MANUEL")) {
+
+                System.out.println("test manuel acquitté1");
+                messageConsole("FIN TEST MANUEL");
+                voyant.setBackground(Color.GRAY);
+                activerBtnProgrammation();
+
+            }
+
         } else {
 
             if (inputLine.trim().startsWith("-> FIN TEST MANUEL")) {
 
+                System.out.println("test manuel acquitté2");
                 messageConsole("FIN TEST MANUEL");
                 voyant.setBackground(Color.GRAY);
                 activerBtnProgrammation();
