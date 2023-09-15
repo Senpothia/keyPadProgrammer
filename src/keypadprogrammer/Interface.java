@@ -41,8 +41,9 @@ public class Interface extends javax.swing.JFrame implements Observer {
     private int newWriteTimeout = 0;
 
     private boolean connexionRS232Active = false;       // état de la connexion RS-232
-  
+
     private boolean testActif = false;
+    private boolean auto = true;
 
     /**
      * Creates new form Interface
@@ -72,6 +73,8 @@ public class Interface extends javax.swing.JFrame implements Observer {
         binaryLocLabel.setBackground(new Color(247, 242, 208));
         progLocLabel.setOpaque(true);
         binaryLocLabel.setOpaque(true);
+
+        aide.getContentPane().setBackground(new Color(247, 242, 208));
 
         List<JRadioButtonMenuItem> listePorts = new ArrayList<JRadioButtonMenuItem>();
 
@@ -117,6 +120,13 @@ public class Interface extends javax.swing.JFrame implements Observer {
         titreLabHex = new javax.swing.JLabel();
         aide = new javax.swing.JFrame();
         btnFermerAide = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         titre = new javax.swing.JLabel();
         btnProg = new javax.swing.JButton();
         btnEffacer = new javax.swing.JButton();
@@ -276,7 +286,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
         );
 
         aide.setTitle("Programmateur keypad - Aide");
-        aide.setMinimumSize(new java.awt.Dimension(600, 600));
+        aide.setMinimumSize(new java.awt.Dimension(900, 900));
 
         btnFermerAide.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnFermerAide.setForeground(new java.awt.Color(255, 0, 0));
@@ -287,21 +297,68 @@ public class Interface extends javax.swing.JFrame implements Observer {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("AIDE DU PROGRAMMATEUR GALEO");
+        jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel2.setText("1- PARAMETRES");
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel3.setText("2- FONCTIONNALITES DE PROGRAMMATION");
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel4.setText("4- TESTS FONCTIONNELS");
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel5.setText("3- MATERIEL ET CONNEXION");
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jTextArea1.setText("Pour que le système puisse fonctionner, il est nécessaire que:\n\n- le programmateur STM32CubeProgrammer soit installer sur votre poste de travail. Il est \ntéléchargeable à partir du site de ST Microelectronics. \n- que le version 8 de Java soit installer sur votre poste\n\nEnsuite, il est nécessaire de spécifier le repertoire d'installation du programmateur. Vous devrez identifier le repertoire bin dans \nce répertoire d'installation. Pour plus de confort, il est recommandé dedéfinir cette emplacement des les variables d'environnement de \nvotre système.\n\nPour finir, il vous sera aussi nécessaire de préciser l'emplacement de votre fichier binaire (extension .hex).\n\nCes paramètres sont indispenables au foncionnement du programamteur GALEO. Il est possible de les définir à partir du menu \nparamètres de l'application.\n\n");
+        jScrollPane1.setViewportView(jTextArea1);
+
         javax.swing.GroupLayout aideLayout = new javax.swing.GroupLayout(aide.getContentPane());
         aide.getContentPane().setLayout(aideLayout);
         aideLayout.setHorizontalGroup(
             aideLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, aideLayout.createSequentialGroup()
-                .addContainerGap(280, Short.MAX_VALUE)
+                .addContainerGap(1118, Short.MAX_VALUE)
                 .addComponent(btnFermerAide)
-                .addGap(39, 39, 39))
+                .addGap(22, 22, 22))
+            .addGroup(aideLayout.createSequentialGroup()
+                .addGap(310, 310, 310)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(aideLayout.createSequentialGroup()
+                .addGap(49, 49, 49)
+                .addGroup(aideLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel2)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         aideLayout.setVerticalGroup(
             aideLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, aideLayout.createSequentialGroup()
-                .addContainerGap(251, Short.MAX_VALUE)
+                .addGap(43, 43, 43)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53)
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel3)
+                .addGap(30, 30, 30)
+                .addComponent(jLabel5)
+                .addGap(71, 71, 71)
+                .addComponent(jLabel4)
+                .addGap(45, 45, 45)
                 .addComponent(btnFermerAide)
-                .addGap(24, 24, 24))
+                .addGap(25, 25, 25))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -779,13 +836,16 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
         if (!testActif) {
 
-            connecteur.envoyerData(Constants.START);
+            System.out.println("Démarrage");
+            connecteur.envoyerData("1");
             testActif = true;
+            auto = true;
             voyantTestEnCours(true);
             activerBtnReponseOp(testActif);
 
         } else {
 
+            System.out.println("Acquittement");
             connecteur.envoyerData(Constants.AQC);
             testActif = false;
             console.setText("TEST ACQUITTE - PRET POUR NOUVEAU TEST!");
@@ -958,10 +1018,17 @@ public class Interface extends javax.swing.JFrame implements Observer {
     private javax.swing.ButtonGroup groupParity;
     private javax.swing.ButtonGroup groupPorts;
     private javax.swing.ButtonGroup groupStop;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JMenu menuAide;
     private javax.swing.JMenu menuBaud;
     private javax.swing.JMenu menuBits;
@@ -1008,7 +1075,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
             btnTester.setBackground(Color.GRAY);
             btnTester.setOpaque(true);
             voyant.setBackground(Color.GRAY);
-             statutPGRM.setBackground(Color.RED);
+            statutPGRM.setBackground(Color.RED);
 
         } else {
 
@@ -1025,7 +1092,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 btnTester.setBackground(Color.GRAY);
                 btnTester.setOpaque(true);
                 voyant.setBackground(Color.GRAY);
-                 statutPGRM.setBackground(Color.RED);
+                statutPGRM.setBackground(Color.RED);
 
             } else {
 
@@ -1066,8 +1133,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
             btnTester.setOpaque(true);
         }
 
-      
-
     }
 
     public void montrerError(String message, String titre) {
@@ -1089,8 +1154,12 @@ public class Interface extends javax.swing.JFrame implements Observer {
     public void update(Observable o, Object arg) {
 
         String inputLine = (String) arg;
-        console.setText("");
-        console.setText(inputLine);
+        System.out.println(inputLine);
+        if (auto) {
+
+            console.setText(inputLine);
+        }
+
         processRapport(inputLine);
 
     }
@@ -1114,19 +1183,54 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
     private void processRapport(String inputLine) {
 
-        if (inputLine.trim().startsWith("-> TEST CONFORME")) {
+        if (auto) {
 
-            messageConsole("TEST CONFORME - EN ATTENTE ACQUITTEMENT");
-            activerBtnAcquittement(true);
-            voyantTestOK(true);
+            if (inputLine.trim().startsWith("-> TEST CONFORME")) {
 
+                messageConsole("TEST CONFORME - EN ATTENTE ACQUITTEMENT");
+                activerBtnAcquittement(true);
+                voyantTestOK(true);
+
+            }
+
+            if (inputLine.trim().startsWith("-> ERREUR: ")) {
+
+                messageConsole("TEST NON CONFORME - EN ATTENTE ACQUITTEMENT");
+                activerBtnAcquittement(true);
+                voyantTestOK(false);
+
+            }
+
+            if (inputLine.trim().startsWith("-> TEST MANUEL")) {
+
+                messageConsole("TEST MANUEL EN COURS");
+                auto = false;
+                voyant.setBackground(Color.BLUE);
+                btnTester.setEnabled(false);
+                btnTester.setBackground(Color.GRAY);
+                btnProg.setEnabled(false);
+                btnProg.setBackground(Color.GRAY);
+                btnEffacer.setEnabled(false);
+                btnEffacer.setBackground(Color.GRAY);
+
+            }
+
+        } else {
+
+            if (inputLine.trim().startsWith("-> FIN TEST MANUEL")) {
+
+                messageConsole("FIN TEST MANUEL");
+                voyant.setBackground(Color.GRAY);
+                activerBtnProgrammation();
+
+            }
         }
 
-        if (inputLine.trim().startsWith("-> ERREUR: ")) {
+        if (inputLine.trim().startsWith("-> TEST ACQUITTE")) {
 
-            messageConsole("TEST NON CONFORME - EN ATTENTE ACQUITTEMENT");
-            activerBtnAcquittement(true);
-            voyantTestOK(false);
+            messageConsole("TEST ACQUITTE");
+            voyant.setBackground(Color.GRAY);
+            activerBtnProgrammation();
 
         }
 
@@ -1229,8 +1333,8 @@ public class Interface extends javax.swing.JFrame implements Observer {
         btnEffacer.setText("EFFACER");
         btnEffacer.setEnabled(true);
         btnEffacer.setBackground(new Color(163, 194, 240));
-
         testActif = false;
+        auto = true;
 
     }
 

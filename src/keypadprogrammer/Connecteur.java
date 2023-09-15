@@ -220,5 +220,10 @@ public class Connecteur extends Observable {
       
 
     }
+    
+    void flushBuffer(){
+    
+        portComm.flushIOBuffers();
+    }
 
 }
