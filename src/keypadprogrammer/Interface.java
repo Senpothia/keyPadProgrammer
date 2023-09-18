@@ -30,6 +30,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
     private String progLocation = null;
     private String hexLocation = null;
     private boolean envVariable = false;
+    private boolean confirmationParams = false;
 
     Connecteur connecteur = getConnecteur();            // gére la connexion RS232
 
@@ -120,17 +121,16 @@ public class Interface extends javax.swing.JFrame implements Observer {
         } else {
 
             System.out.println("varEnv = " + initialisation.getVarEnv());
-            if(initialisation.getVarEnv().equals("true")){
-                
+            if (initialisation.getVarEnv().equals("true")) {
+
                 envVariable = true;
             }
-            
-             if(initialisation.getVarEnv().equals("false")){
-                
+
+            if (initialisation.getVarEnv().equals("false")) {
+
                 envVariable = false;
             }
-            
-            
+
         }
 
         testParamsProg();
@@ -882,6 +882,17 @@ public class Interface extends javax.swing.JFrame implements Observer {
         if (!testActif) {
 
             System.out.println("Démarrage");
+            if(!confirmationParams){
+                
+                boolean confirmation = confirmeParams();
+                if(!confirmation){
+                    
+                    return;
+                }else{
+                    
+                    confirmationParams = true;
+                }
+            }
             connecteur.envoyerData("1");
             testActif = true;
             auto = true;
@@ -1197,6 +1208,23 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
         JOptionPane.showMessageDialog(this, message, titre, JOptionPane.ERROR_MESSAGE);
     }
+
+    public boolean confirmeParams() {
+
+        int response = JOptionPane.showConfirmDialog(this, "Confirmez-vous ces paramètres?", "Paramètres de programmation définis", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (response == JOptionPane.NO_OPTION) {
+            System.out.println("No button clicked");
+            return false;
+        }
+        if(response == JOptionPane.YES_OPTION){
+            
+            return true;
+            
+        }
+        return false;
+        
+    }
+    
 
     private Connecteur getConnecteur() {
 
