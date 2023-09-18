@@ -45,10 +45,13 @@ public class Interface extends javax.swing.JFrame implements Observer {
     private boolean testActif = false;
     private boolean auto = true;
 
+    public static Initializer initializer = new Initializer();  // Charge les propriétés du fichier properties contenant les paramètres de programmation
+    public static Initialisation initialisation;          // Centralise les données rapportées par l'initializer
+
     /**
      * Creates new form Interface
      */
-    public Interface() {
+    public Interface() throws IOException {
 
         initComponents();
         statutRs232.setBackground(Color.RED);
@@ -86,6 +89,48 @@ public class Interface extends javax.swing.JFrame implements Observer {
             groupPorts.add(m);
             m.addActionListener(new PortSupplier());
             menuPort.add(m);
+        }
+
+        initialisation = initializer.getInit();
+        if (initialisation.getBinaryLocation().equals("na")) {
+
+            System.out.println("BinaryLocation = " + initialisation.getBinaryLocation());
+
+        } else {
+
+            System.out.println("BinaryLocation = " + initialisation.getBinaryLocation());
+            hexLocation = initialisation.getBinaryLocation();
+        }
+
+        if (initialisation.getProgrammerDirectory().equals("na")) {
+
+            System.out.println("programmerDirectory = " + initialisation.getProgrammerDirectory());
+
+        } else {
+
+            System.out.println("programmerDirectory = " + initialisation.getProgrammerDirectory());
+            progLocation = initialisation.getProgrammerDirectory();
+
+        }
+
+        if (initialisation.getVarEnv().equals("na")) {
+
+            System.out.println("varEnv = " + initialisation.getVarEnv());
+
+        } else {
+
+            System.out.println("varEnv = " + initialisation.getVarEnv());
+            if(initialisation.getVarEnv().equals("true")){
+                
+                envVariable = true;
+            }
+            
+             if(initialisation.getVarEnv().equals("false")){
+                
+                envVariable = false;
+            }
+            
+            
         }
 
         testParamsProg();
@@ -983,7 +1028,11 @@ public class Interface extends javax.swing.JFrame implements Observer {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Interface().setVisible(true);
+                try {
+                    new Interface().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -1107,6 +1156,15 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 btnTester.setBackground(new Color(163, 194, 240));
                 btnTester.setOpaque(true);
                 statutPGRM.setBackground(Color.GREEN);
+                initializer.update("binaryLocation", hexLocation);
+                initializer.update("programmerDirectory", progLocation);
+                if (envVariable) {
+
+                    initializer.update("varEnv", "true");
+                } else {
+
+                    initializer.update("varEnv", "false");
+                }
 
             }
 

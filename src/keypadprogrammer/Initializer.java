@@ -20,17 +20,17 @@ public class Initializer {
 
     public Initialisation getInit() throws FileNotFoundException, IOException {
 
-        Properties cloudProperpies = new Properties();
+        Properties progProperpies = new Properties();
 
-        FileReader reader = new FileReader("src\\main\\java\\remote.properties");
-        // FileReader reader = new FileReader(".\\remote.properties");
-        cloudProperpies.load(reader);
+        //FileReader reader = new FileReader("src\\keypadprogrammer\\params.properties");
+         FileReader reader = new FileReader(".\\params.properties");
+        progProperpies.load(reader);
 
-        String programmerDirectory = cloudProperpies.getProperty("programmerDirectory");
-        String binaryLocation = cloudProperpies.getProperty("binaryLocation");
-        String varEnv = cloudProperpies.getProperty("varEnv");
+        String programmerDirectory = progProperpies.getProperty("programmerDirectory");
+        String binaryLocation = progProperpies.getProperty("binaryLocation");
+        String varEnv = progProperpies.getProperty("varEnv");
 
-        Initialisation init = new Initialisation(programmerDirectory, Boolean.parseBoolean(varEnv), binaryLocation);
+        Initialisation init = new Initialisation(programmerDirectory, varEnv, binaryLocation);
 
         return init;
     }
@@ -39,21 +39,21 @@ public class Initializer {
 
         try {
 
-            Properties cloudProperpies = new Properties();
+            Properties progProperpies = new Properties();
             //first load old one:
 
-            FileInputStream configStream = new FileInputStream("src\\main\\java\\params.properties");
-            //   FileInputStream configStream = new FileInputStream(".\\remote.properties");
-            cloudProperpies.load(configStream);
+            //FileInputStream configStream = new FileInputStream("src\\keypadprogrammer\\params.properties");
+            FileInputStream configStream = new FileInputStream(".\\params.properties");
+            progProperpies.load(configStream);
             configStream.close();
 
             //modifies existing or adds new property
-            cloudProperpies.setProperty(key, value);
+            progProperpies.setProperty(key, value);
 
             //save modified property file
-            FileOutputStream output = new FileOutputStream("src\\main\\java\\params.properties");
-            //FileOutputStream output = new FileOutputStream(".\\remote.properties");
-            cloudProperpies.store(output, "GALEO TESTER - Properties");
+            //FileOutputStream output = new FileOutputStream("src\\keypadprogrammer\\params.properties");
+            FileOutputStream output = new FileOutputStream(".\\params.properties");
+            progProperpies.store(output, "GALEO TESTER - Properties");
             output.close();
 
         } catch (IOException ex) {

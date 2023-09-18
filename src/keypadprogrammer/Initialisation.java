@@ -12,10 +12,10 @@ package keypadprogrammer;
 public class Initialisation {
 
     private String programmerDirectory;
-    private boolean varEnv;
+    private String varEnv;
     private String binaryLocation;
 
-    public Initialisation(String programmerDirectory, boolean varEnv, String binaryLocation) {
+    public Initialisation(String programmerDirectory, String varEnv, String binaryLocation) {
         this.programmerDirectory = programmerDirectory;
         this.varEnv = varEnv;
         this.binaryLocation = binaryLocation;
@@ -29,11 +29,11 @@ public class Initialisation {
         this.programmerDirectory = programmerDirectory;
     }
 
-    public boolean isVarEnv() {
+    public String getVarEnv() {
         return varEnv;
     }
 
-    public void setVarEnv(boolean varEnv) {
+    public void setVarEnv(String varEnv) {
         this.varEnv = varEnv;
     }
 
@@ -45,4 +45,5 @@ public class Initialisation {
         this.binaryLocation = binaryLocation;
     }
 
+   
 }
