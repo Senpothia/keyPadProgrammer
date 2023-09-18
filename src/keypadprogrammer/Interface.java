@@ -731,14 +731,14 @@ public class Interface extends javax.swing.JFrame implements Observer {
             connecteur.envoyerData(Constants.KO);
             console.setText("Résultat non conforme. Test terminé!");
             voyant.setBackground(Color.RED);
-            testActif = false;
+            //testActif = false;
             btnEffacer.setText("Effacer");
             btnEffacer.setBackground(Color.GRAY);
             btnEffacer.setEnabled(false);
             btnProg.setText("Programmer");
             btnProg.setBackground(Color.GRAY);
             btnProg.setEnabled(false);
-            btnTester.setText("Acquitter");
+            btnTester.setText("ACQ");
             btnTester.setBackground(Color.GRAY);
             btnTester.setEnabled(true);
 
@@ -1193,14 +1193,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
             }
 
-            if (inputLine.trim().startsWith("-> ERREUR: ")) {
-
-                messageConsole("TEST NON CONFORME - EN ATTENTE ACQUITTEMENT");
-                activerBtnAcquittement(true);
-                voyantTestOK(false);
-
-            }
-
             if (inputLine.trim().startsWith("-> TEST MANUEL")) {
 
                 messageConsole("TEST MANUEL EN COURS");
@@ -1221,6 +1213,17 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 messageConsole("FIN TEST MANUEL");
                 voyant.setBackground(Color.GRAY);
                 activerBtnProgrammation();
+
+            }
+
+            if (inputLine.trim().startsWith("-> ERREUR:")) {
+
+                System.out.println("Signalisation erreur!");
+                //testActif = false;
+                messageConsole(inputLine.trim());
+                activerBtnAcquittement(true);
+                voyantTestOK(false);
+                System.out.println("testActif  =" + testActif);
 
             }
 
