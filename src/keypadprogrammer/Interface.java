@@ -10,6 +10,7 @@ import java.awt.Font;
 import java.awt.color.ColorSpace;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -708,13 +709,25 @@ public class Interface extends javax.swing.JFrame implements Observer {
     private void btnProgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProgActionPerformed
         if (!testActif) {
 
-            console.setText("Programmation en cours");
-            voyant.setBackground(Color.YELLOW);
+            if (!confirmationParams) {
+
+                boolean confirmation = confirmeParams();
+                if (!confirmation) {
+
+                    return;
+                } else {
+
+                    confirmationParams = true;
+                }
+            }
+
             Runtime runtime = Runtime.getRuntime();
             try {
                 // Process process = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD -w C:\\Users\\Michel\\Desktop\\livrable\\BLE9.hex 0x08000000");
                 if (envVariable) {
 
+                    console.setText("Programmation en cours");
+                    voyant.setBackground(Color.YELLOW);
                     Process process = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD -w" + " " + hexLocation + " 0x08000000");
                 } else {
 
@@ -726,7 +739,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
             try {
 
-                Thread.sleep(2000);
+                Thread.sleep(5000);
 
             } catch (InterruptedException ex) {
                 Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
@@ -744,12 +757,25 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
     private void btnEffacerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEffacerActionPerformed
         if (!testActif) {
+            System.out.println("fonction Effacement");
+            if (!confirmationParams) {
 
-            console.setText("Effacement en cours");
-            voyant.setBackground(Color.YELLOW);
+                boolean confirmation = confirmeParams();
+
+                if (!confirmation) {
+
+                    System.out.println("return");
+                    return;
+                }
+            }
+            System.out.println("Effacement demandé");
+            //tempo(1);
+            waitForErasing(true);
+
             Runtime runtime = Runtime.getRuntime();
 
             try {
+
                 if (envVariable) {
 
                     Process process = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD -e all");
@@ -761,16 +787,35 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
             }
 
+            tempo(5);
+            waitForErasing(false);
+            confirmationParams = true;
+            System.out.println("Sortie Effacement");
+
+            /*
+            Runtime runtime = Runtime.getRuntime();
+
             try {
-                Thread.sleep(2000);
+                
+                if (envVariable) {
+
+                    Process process = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD -e all");
+                } else {
+
+                }
+                
+            } catch (IOException ex) {
+                Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+            }
+               
+            try {
+
+                Thread.sleep(5000);
 
             } catch (InterruptedException ex) {
                 Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-            console.setText("Effacement terminé");
-            voyant.setBackground(Color.GREEN);
-
+             */
         } else {
 
             connecteur.envoyerData(Constants.KO);
@@ -882,14 +927,14 @@ public class Interface extends javax.swing.JFrame implements Observer {
         if (!testActif) {
 
             System.out.println("Démarrage");
-            if(!confirmationParams){
-                
+            if (!confirmationParams) {
+
                 boolean confirmation = confirmeParams();
-                if(!confirmation){
-                    
+                if (!confirmation) {
+
                     return;
-                }else{
-                    
+                } else {
+
                     confirmationParams = true;
                 }
             }
@@ -1216,15 +1261,14 @@ public class Interface extends javax.swing.JFrame implements Observer {
             System.out.println("No button clicked");
             return false;
         }
-        if(response == JOptionPane.YES_OPTION){
-            
+        if (response == JOptionPane.YES_OPTION) {
+
             return true;
-            
+
         }
         return false;
-        
+
     }
-    
 
     private Connecteur getConnecteur() {
 
@@ -1413,7 +1457,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
     }
 
-    void messageConsole(String message) {
+    private void messageConsole(String message) {
 
         console.setText(message);
 
@@ -1434,6 +1478,55 @@ public class Interface extends javax.swing.JFrame implements Observer {
         btnEffacer.setBackground(new Color(163, 194, 240));
         testActif = false;
         auto = true;
+
+    }
+
+    private void tempo(long duree) {
+
+        System.out.println("keypadprogrammer.Interface.tempo()");
+        LocalDateTime start = LocalDateTime.now();
+        LocalDateTime after = LocalDateTime.now();
+        while (after.isBefore(start.plusSeconds(duree))) {
+
+            after = LocalDateTime.now();
+            console.setText("Effacement demandé");
+            voyant.setBackground(Color.YELLOW);
+        }
+    }
+
+    private void waitForErasing(boolean active) {
+
+        if (active) {
+
+            console.setText("Effacement demandé");
+            voyant.setBackground(Color.YELLOW);
+            System.out.println("Affichage yellow");
+
+        } else {
+
+            console.setText("Effacement terminé");
+            voyant.setBackground(Color.GREEN);
+            System.out.println("Affichage green");
+
+        }
+
+    }
+
+    private void waitForProgramming(boolean active) {
+
+        if (active) {
+
+            console.setText("Programation en cours");
+            voyant.setBackground(Color.YELLOW);
+            voyant.setOpaque(true);
+
+        } else {
+
+            console.setText("Programation terminé");
+            voyant.setBackground(Color.GREEN);
+            voyant.setOpaque(true);
+
+        }
 
     }
 
