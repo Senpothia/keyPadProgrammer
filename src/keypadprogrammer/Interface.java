@@ -50,6 +50,8 @@ public class Interface extends javax.swing.JFrame implements Observer {
     public static Initializer initializer = new Initializer();  // Charge les propriétés du fichier properties contenant les paramètres de programmation
     public static Initialisation initialisation;          // Centralise les données rapportées par l'initializer
 
+    private Programmer programmer = new Programmer();
+
     /**
      * Creates new form Interface
      */
@@ -93,6 +95,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
             menuPort.add(m);
         }
 
+        
         initialisation = initializer.getInit();
         if (initialisation.getBinaryLocation().equals("na")) {
 
@@ -133,7 +136,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
             }
 
         }
-
+        
         testParamsProg();
 
     }
@@ -721,31 +724,18 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 }
             }
 
-            Runtime runtime = Runtime.getRuntime();
-            try {
-                // Process process = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD -w C:\\Users\\Michel\\Desktop\\livrable\\BLE9.hex 0x08000000");
-                if (envVariable) {
+            console.setText("Programmation en cours");
+            voyant.setBackground(Color.YELLOW);
 
-                    console.setText("Programmation en cours");
-                    voyant.setBackground(Color.YELLOW);
-                    Process process = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD -w" + " " + hexLocation + " 0x08000000");
-                } else {
+            Thread t = new Thread() {
+                public void run() {
 
+                    connecteur.program(hexLocation, envVariable, progLocation);
                 }
+            };
+            t.start();
 
-            } catch (IOException ex) {
-                Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            try {
-
-                Thread.sleep(5000);
-
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            console.setText("Programmation terminée");
-            voyant.setBackground(Color.GREEN);
+           
         } else {
 
             connecteur.envoyerData(Constants.OK);
@@ -768,60 +758,23 @@ public class Interface extends javax.swing.JFrame implements Observer {
                     return;
                 }
             }
-            System.out.println("Effacement demandé");
-            //tempo(1);
-            waitForErasing(true);
 
-            Runtime runtime = Runtime.getRuntime();
+            console.setText("Effacement en cours");
+            voyant.setBackground(Color.YELLOW);
 
-            try {
+            Thread t = new Thread() {
+                public void run() {
 
-                if (envVariable) {
-
-                    Process process = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD -e all");
-                } else {
-
+                    connecteur.erase(envVariable, progLocation);
                 }
+            };
+            t.start();
 
-            } catch (IOException ex) {
-                Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            tempo(5);
-            waitForErasing(false);
-            confirmationParams = true;
-            System.out.println("Sortie Effacement");
-
-            /*
-            Runtime runtime = Runtime.getRuntime();
-
-            try {
-                
-                if (envVariable) {
-
-                    Process process = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD -e all");
-                } else {
-
-                }
-                
-            } catch (IOException ex) {
-                Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
-            }
-               
-            try {
-
-                Thread.sleep(5000);
-
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
-            }
-             */
         } else {
 
             connecteur.envoyerData(Constants.KO);
             console.setText("Résultat non conforme. Test terminé!");
             voyant.setBackground(Color.RED);
-            //testActif = false;
             btnEffacer.setText("Effacer");
             btnEffacer.setBackground(Color.GRAY);
             btnEffacer.setEnabled(false);
@@ -1283,14 +1236,32 @@ public class Interface extends javax.swing.JFrame implements Observer {
     @Override
     public void update(Observable o, Object arg) {
 
-        String inputLine = (String) arg;
-        System.out.println(inputLine);
-        if (auto) {
+        if (arg instanceof Integer) {
 
-            console.setText(inputLine);
+            if ((Integer) arg == 10) {
+
+                voyant.setBackground(Color.GREEN);
+                console.setText("Programmation terminée!");
+            }
+            
+              if ((Integer) arg == 50) {
+
+                voyant.setBackground(Color.GREEN);
+                console.setText("Effacement terminée!");
+            }
+            
+
+        } else {
+
+            String inputLine = (String) arg;
+            System.out.println(inputLine);
+            if (auto) {
+
+                console.setText(inputLine);
+            }
+
+            processRapport(inputLine);
         }
-
-        processRapport(inputLine);
 
     }
 

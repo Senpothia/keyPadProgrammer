@@ -15,6 +15,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -217,13 +219,75 @@ public class Connecteur extends Observable {
 
     void resetTestBoard() {
 
-      
+    }
+
+    void flushBuffer() {
+
+        portComm.flushIOBuffers();
+    }
+
+    public void programmationCompleted(Integer operation) {
+
+        this.setChanged();
+        this.notifyObservers(operation);
 
     }
-    
-    void flushBuffer(){
-    
-        portComm.flushIOBuffers();
+
+    public void program(String hexLocation, boolean envVariable, String programmerLocation) {
+
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            // Process process = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD -w C:\\Users\\Michel\\Desktop\\livrable\\BLE9.hex 0x08000000");
+            if (envVariable) {
+
+                Process process = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD -w" + " " + hexLocation + " 0x08000000");
+            } else {
+
+            }
+
+        } catch (IOException ex) {
+            Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+
+            Thread.sleep(5000);
+
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        programmationCompleted(new Integer(10));
+
+    }
+
+    public void erase(boolean envVariable, String programmerLocation) {
+
+        Runtime runtime = Runtime.getRuntime();
+
+        try {
+
+            if (envVariable) {
+
+                Process process = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD -e all");
+            } else {
+
+            }
+
+        } catch (IOException ex) {
+            Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+         try {
+
+            Thread.sleep(5000);
+
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        programmationCompleted(new Integer(50));
+
     }
 
 }
