@@ -28,8 +28,10 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
     private File programmerLocation = null;
     private File binaryLocation = null;
+    private File BLELocation = null;
     private String progLocation = null;
     private String hexLocation = null;
+    private String bleLocation = null;
     private boolean envVariable = false;
     private boolean confirmationParams = false;
 
@@ -49,8 +51,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
     public static Initializer initializer = new Initializer();  // Charge les propriétés du fichier properties contenant les paramètres de programmation
     public static Initialisation initialisation;          // Centralise les données rapportées par l'initializer
-
-    private Programmer programmer = new Programmer();
 
     /**
      * Creates new form Interface
@@ -78,8 +78,10 @@ public class Interface extends javax.swing.JFrame implements Observer {
         paramsWin.getContentPane().setBackground(new Color(83, 141, 163));
         progLocLabel.setBackground(new Color(247, 242, 208));
         binaryLocLabel.setBackground(new Color(247, 242, 208));
+        bleLocLabel.setBackground(new Color(247, 242, 208));
         progLocLabel.setOpaque(true);
         binaryLocLabel.setOpaque(true);
+        bleLocLabel.setOpaque(true);
 
         aide.getContentPane().setBackground(new Color(247, 242, 208));
 
@@ -95,7 +97,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
             menuPort.add(m);
         }
 
-        
         initialisation = initializer.getInit();
         if (initialisation.getBinaryLocation().equals("na")) {
 
@@ -105,6 +106,16 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
             System.out.println("BinaryLocation = " + initialisation.getBinaryLocation());
             hexLocation = initialisation.getBinaryLocation();
+        }
+
+        if (initialisation.getBleLocation().equals("na")) {
+
+            System.out.println("BleLocation = " + initialisation.getBleLocation());
+
+        } else {
+
+            System.out.println("BleLocation = " + initialisation.getBleLocation());
+            bleLocation = initialisation.getBleLocation();
         }
 
         if (initialisation.getProgrammerDirectory().equals("na")) {
@@ -136,7 +147,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
             }
 
         }
-        
+
         testParamsProg();
 
     }
@@ -151,6 +162,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
     private void initComponents() {
 
         programmerLoc = new javax.swing.JFileChooser();
+        bleLoc = new javax.swing.JFileChooser();
         btnSelectLocationProg = new javax.swing.JButton();
         btnSelectBinaryLoc = new javax.swing.JButton();
         binaryLoc = new javax.swing.JFileChooser();
@@ -167,6 +179,8 @@ public class Interface extends javax.swing.JFrame implements Observer {
         titreLabProg = new javax.swing.JLabel();
         EnvVarBox = new javax.swing.JCheckBox();
         titreLabHex = new javax.swing.JLabel();
+        titreLabBLE = new javax.swing.JLabel();
+        bleLocLabel = new javax.swing.JLabel();
         aide = new javax.swing.JFrame();
         btnFermerAide = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -192,6 +206,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
         menuVoir = new javax.swing.JMenuItem();
         paramsProg = new javax.swing.JMenuItem();
         paramBinaire = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         btnFermer = new javax.swing.JMenuItem();
         menuConnexion = new javax.swing.JMenu();
@@ -240,7 +255,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
         });
 
         paramsWin.setTitle("Programmateur keypad - Paramètres système");
-        paramsWin.setMinimumSize(new java.awt.Dimension(600, 400));
+        paramsWin.setMinimumSize(new java.awt.Dimension(1321, 481));
 
         titreParamsWin.setBackground(new java.awt.Color(153, 153, 255));
         titreParamsWin.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -286,52 +301,73 @@ public class Interface extends javax.swing.JFrame implements Observer {
         titreLabHex.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         titreLabHex.setText("Fichier binaire");
 
+        titreLabBLE.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        titreLabBLE.setText("Fichier BLE");
+
+        bleLocLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        bleLocLabel.setForeground(new java.awt.Color(255, 0, 51));
+        bleLocLabel.setText("Jlabel");
+        bleLocLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
         javax.swing.GroupLayout paramsWinLayout = new javax.swing.GroupLayout(paramsWin.getContentPane());
         paramsWin.getContentPane().setLayout(paramsWinLayout);
         paramsWinLayout.setHorizontalGroup(
             paramsWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paramsWinLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnFermerParams)
-                .addGap(32, 32, 32))
+            .addGroup(paramsWinLayout.createSequentialGroup()
+                .addGroup(paramsWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(paramsWinLayout.createSequentialGroup()
+                        .addGroup(paramsWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(paramsWinLayout.createSequentialGroup()
+                                .addGap(392, 392, 392)
+                                .addComponent(titreParamsWin, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(paramsWinLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(titreLabHex, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(paramsWinLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(titreLabBLE, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 551, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paramsWinLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnFermerParams)))
+                .addGap(56, 56, 56))
             .addGroup(paramsWinLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(paramsWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(paramsWinLayout.createSequentialGroup()
-                        .addComponent(progLocLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paramsWinLayout.createSequentialGroup()
-                        .addGap(0, 222, Short.MAX_VALUE)
-                        .addComponent(titreParamsWin, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(204, 204, 204))
-                    .addComponent(binaryLocLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(paramsWinLayout.createSequentialGroup()
-                        .addComponent(titreLabProg, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(paramsWinLayout.createSequentialGroup()
                         .addGroup(paramsWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(titreLabHex, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(EnvVarBox))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(EnvVarBox)
+                            .addComponent(titreLabProg, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paramsWinLayout.createSequentialGroup()
+                        .addGroup(paramsWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(binaryLocLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(bleLocLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(progLocLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())))
         );
         paramsWinLayout.setVerticalGroup(
             paramsWinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(paramsWinLayout.createSequentialGroup()
-                .addGap(29, 29, 29)
+                .addGap(27, 27, 27)
                 .addComponent(titreParamsWin)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                .addGap(16, 16, 16)
                 .addComponent(titreLabProg)
-                .addGap(28, 28, 28)
+                .addGap(18, 18, 18)
                 .addComponent(EnvVarBox)
                 .addGap(18, 18, 18)
                 .addComponent(progLocLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
+                .addGap(18, 18, 18)
                 .addComponent(titreLabHex)
-                .addGap(29, 29, 29)
+                .addGap(18, 18, 18)
                 .addComponent(binaryLocLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
+                .addGap(18, 18, 18)
+                .addComponent(titreLabBLE)
+                .addGap(18, 18, 18)
+                .addComponent(bleLocLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
                 .addComponent(btnFermerParams)
-                .addGap(27, 27, 27))
+                .addGap(21, 21, 21))
         );
 
         aide.setTitle("Programmateur keypad - Aide");
@@ -502,6 +538,14 @@ public class Interface extends javax.swing.JFrame implements Observer {
             }
         });
         menuParametres.add(paramBinaire);
+
+        jMenuItem1.setText("BLE");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        menuParametres.add(jMenuItem1);
         menuParametres.add(jSeparator1);
 
         btnFermer.setText("Fermer");
@@ -730,12 +774,11 @@ public class Interface extends javax.swing.JFrame implements Observer {
             Thread t = new Thread() {
                 public void run() {
 
-                    connecteur.program(hexLocation, envVariable, progLocation);
+                    connecteur.program(hexLocation, bleLocation, envVariable, progLocation);
                 }
             };
             t.start();
 
-           
         } else {
 
             connecteur.envoyerData(Constants.OK);
@@ -840,7 +883,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
             String binPath = binaryLocation.getPath();
             String[] extension = binPath.split("\\.");
-            if (!extension[1].equals("hex")) {
+            if (!extension[1].equals("hex") && !extension[1].equals("bin")) {
 
                 montrerError("Le fichier binaire n'est pas valide", "Fichier binaire invalide");
                 return;
@@ -870,6 +913,14 @@ public class Interface extends javax.swing.JFrame implements Observer {
         } else {
 
             binaryLocLabel.setText("Fichier binaire non défini!");
+        }
+
+        if (bleLocation != null) {
+
+            bleLocLabel.setText("Fichier ble: " + bleLocation);
+        } else {
+
+            bleLocLabel.setText("Fichier ble non défini!");
         }
 
 
@@ -1007,6 +1058,27 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
     }//GEN-LAST:event_menuConnexionActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+
+        bleLoc.showOpenDialog(this);
+        BLELocation = bleLoc.getSelectedFile();
+        if (BLELocation != null) {
+
+            String binPath = BLELocation.getPath();
+            String[] extension = binPath.split("\\.");
+            if (!extension[1].equals("hex") && !extension[1].equals("bin")) {
+
+                montrerError("Le fichier binaire n'est pas valide", "Fichier binaire invalide");
+                return;
+            }
+            console.setText("Binaire location: " + BLELocation.getPath());
+            bleLocation = BLELocation.getPath();
+
+        }
+
+        testParamsProg();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1060,6 +1132,8 @@ public class Interface extends javax.swing.JFrame implements Observer {
     private javax.swing.JRadioButtonMenuItem bits7;
     private javax.swing.JRadioButtonMenuItem bits8;
     private javax.swing.JRadioButtonMenuItem bits9;
+    private javax.swing.JFileChooser bleLoc;
+    private javax.swing.JLabel bleLocLabel;
     private javax.swing.JMenuItem btnConnexion;
     private javax.swing.JMenuItem btnDeconnexion;
     private javax.swing.JButton btnEffacer;
@@ -1082,6 +1156,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
@@ -1110,6 +1185,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
     private javax.swing.JRadioButtonMenuItem stop1;
     private javax.swing.JRadioButtonMenuItem stop2;
     private javax.swing.JLabel titre;
+    private javax.swing.JLabel titreLabBLE;
     private javax.swing.JLabel titreLabHex;
     private javax.swing.JLabel titreLabProg;
     private javax.swing.JLabel titreParamsWin;
@@ -1137,9 +1213,9 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
         } else {
 
-            if (!envVariable && progLocation == null) {
+            if (bleLocation == null) {
 
-                console.setText("Repertoire programmateur non défini!");
+                console.setText("Le fichier BLE n'est pas défini!");
                 btnEffacer.setEnabled(false);
                 btnEffacer.setBackground(Color.GRAY);
                 btnEffacer.setOpaque(true);
@@ -1154,25 +1230,46 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
             } else {
 
-                console.setText("Paramètres de programmation définis. Vous pouvez commencer!");
-                btnEffacer.setEnabled(true);
-                btnEffacer.setBackground(new Color(163, 194, 240));
-                btnEffacer.setOpaque(true);
-                btnProg.setEnabled(true);
-                btnProg.setBackground(new Color(163, 194, 240));
-                btnProg.setOpaque(true);
-                btnTester.setEnabled(true);
-                btnTester.setBackground(new Color(163, 194, 240));
-                btnTester.setOpaque(true);
-                statutPGRM.setBackground(Color.GREEN);
-                initializer.update("binaryLocation", hexLocation);
-                initializer.update("programmerDirectory", progLocation);
-                if (envVariable) {
+                if (!envVariable && progLocation == null) {
 
-                    initializer.update("varEnv", "true");
+                    console.setText("Repertoire programmateur non défini!");
+                    btnEffacer.setEnabled(false);
+                    btnEffacer.setBackground(Color.GRAY);
+                    btnEffacer.setOpaque(true);
+                    btnProg.setEnabled(false);
+                    btnProg.setBackground(Color.GRAY);
+                    btnProg.setOpaque(true);
+                    btnTester.setEnabled(false);
+                    btnTester.setBackground(Color.GRAY);
+                    btnTester.setOpaque(true);
+                    voyant.setBackground(Color.GRAY);
+                    statutPGRM.setBackground(Color.RED);
+
                 } else {
 
-                    initializer.update("varEnv", "false");
+                    console.setText("Paramètres de programmation définis. Vous pouvez commencer!");
+                    btnEffacer.setEnabled(true);
+                    btnEffacer.setBackground(new Color(163, 194, 240));
+                    btnEffacer.setOpaque(true);
+                    btnProg.setEnabled(true);
+                    btnProg.setBackground(new Color(163, 194, 240));
+                    btnProg.setOpaque(true);
+                    btnTester.setEnabled(true);
+                    btnTester.setBackground(new Color(163, 194, 240));
+                    btnTester.setOpaque(true);
+                    statutPGRM.setBackground(Color.GREEN);
+                    initializer.update("binaryLocation", hexLocation);
+                    initializer.update("bleLocation", bleLocation);
+                    initializer.update("programmerDirectory", progLocation);
+
+                    if (envVariable) {
+
+                        initializer.update("varEnv", "true");
+                    } else {
+
+                        initializer.update("varEnv", "false");
+                    }
+
                 }
 
             }
@@ -1243,13 +1340,12 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 voyant.setBackground(Color.GREEN);
                 console.setText("Programmation terminée!");
             }
-            
-              if ((Integer) arg == 50) {
+
+            if ((Integer) arg == 50) {
 
                 voyant.setBackground(Color.GREEN);
                 console.setText("Effacement terminée!");
             }
-            
 
         } else {
 
@@ -1324,6 +1420,26 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 messageConsole(inputLine.trim());
                 activerBtnAcquittement(true);
                 voyantTestOK(false);
+                System.out.println("testActif  =" + testActif);
+
+            }
+
+            if (inputLine.trim().startsWith("-> PROGRAMMATION TERMINEE")) {
+
+                System.out.println("programmation terminée");
+                messageConsole(inputLine.trim());
+                activerBtnProgrammation();
+                voyantTestEnCours(false);
+                System.out.println("testActif  =" + testActif);
+
+            }
+
+            if (inputLine.trim().startsWith("-> EFFACEMENT TERMINE")) {
+
+                System.out.println("effacement terminé");
+                messageConsole(inputLine.trim());
+                activerBtnProgrammation();
+                voyantTestEnCours(false);
                 System.out.println("testActif  =" + testActif);
 
             }

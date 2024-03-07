@@ -23,14 +23,15 @@ public class Initializer {
         Properties progProperpies = new Properties();
 
         //FileReader reader = new FileReader("src\\keypadprogrammer\\params.properties");
-         FileReader reader = new FileReader(".\\params.properties");
+        FileReader reader = new FileReader(".\\params.properties");
         progProperpies.load(reader);
 
         String programmerDirectory = progProperpies.getProperty("programmerDirectory");
         String binaryLocation = progProperpies.getProperty("binaryLocation");
         String varEnv = progProperpies.getProperty("varEnv");
-
-        Initialisation init = new Initialisation(programmerDirectory, varEnv, binaryLocation);
+        String bleLocation = progProperpies.getProperty("bleLocation");
+        
+        Initialisation init = new Initialisation(programmerDirectory, varEnv, binaryLocation, bleLocation);
 
         return init;
     }

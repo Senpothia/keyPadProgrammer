@@ -233,14 +233,60 @@ public class Connecteur extends Observable {
 
     }
 
-    public void program(String hexLocation, boolean envVariable, String programmerLocation) {
+    public void program(String hexLocation, String bleLocation, boolean envVariable, String programmerLocation) {
 
+        envoyerData(Constants.PROG);
+        try {
+
+            Thread.sleep(1000);
+
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Runtime runtime = Runtime.getRuntime();
         try {
-            // Process process = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD -w C:\\Users\\Michel\\Desktop\\livrable\\BLE9.hex 0x08000000");
+
             if (envVariable) {
 
-                Process process = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD -w" + " " + hexLocation + " 0x08000000");
+                // 
+                Process startFUS = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD -startFUS");
+                try {
+
+                    Thread.sleep(5000);
+
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                System.out.println("Fin startFUS");
+
+                // 
+                Process upgradeBLE = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD mode=UR -ob nSWboot0=0 nboot1=1 nboot0=1 -fwupgrade" + bleLocation + " " + bleLocation + " 0x080CE000 firstinstall=0 -v");
+
+                try {
+
+                    Thread.sleep(15000);
+
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                System.out.println("Fin updateBLE");
+
+                //
+                Process startStack = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD -startwirelessstack");
+
+                try {
+
+                    Thread.sleep(5000);
+
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                System.out.println("Fin startStack");
+
+                //
+                Process programFirmware = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD -w" + " " + hexLocation + " 0x08000000 -Rst");
+                System.out.println("Fin programmation firmware");
+
             } else {
 
             }
@@ -258,10 +304,20 @@ public class Connecteur extends Observable {
         }
 
         programmationCompleted(new Integer(10));
+        envoyerData(Constants.END_PROG);
 
     }
 
     public void erase(boolean envVariable, String programmerLocation) {
+
+        envoyerData(Constants.ERASE);
+        try {
+
+            Thread.sleep(1000);
+
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         Runtime runtime = Runtime.getRuntime();
 
@@ -277,8 +333,8 @@ public class Connecteur extends Observable {
         } catch (IOException ex) {
             Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-         try {
+
+        try {
 
             Thread.sleep(5000);
 
@@ -287,6 +343,7 @@ public class Connecteur extends Observable {
         }
 
         programmationCompleted(new Integer(50));
+        envoyerData(Constants.END_ERASE);
 
     }
 
