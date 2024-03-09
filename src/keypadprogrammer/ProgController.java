@@ -38,36 +38,62 @@ public class ProgController {
 
     }
 
-    public int find(String logfile, String[] erreurs) {
+    public int find(String logfile, String[] erreurs, String[] requis) {
 
-        try {
-            FileReader fileReader = new FileReader(logfile);
-            BufferedReader reader = new BufferedReader(fileReader);
-            String line = null;
+        int codeControl = 0;
+        /*
+        for (int i = 0; i < erreurs.length; i++) {
 
-            try {
-
-                line = reader.readLine();
-
-            } catch (IOException ex) {
-
-                Logger.getLogger(ProgController.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println(erreurs[i]);
             }
+         */
+        try {
+            // Création d'un fileReader pour lire le fichier
+            FileReader fileReader = new FileReader(logfile);
+
+            // Création d'un bufferedReader qui utilise le fileReader
+            BufferedReader reader = new BufferedReader(fileReader);
+
+            // une fonction à essayer pouvant générer une erreur
+            String line = reader.readLine();
 
             while (line != null) {
 
-                try {
-                    line = reader.readLine();
-                } catch (IOException ex) {
-                    Logger.getLogger(ProgController.class.getName()).log(Level.SEVERE, null, ex);
+                // lecture de la prochaine ligne
+                line = reader.readLine();
+                System.out.println(line);
+
+                if (erreurs != null && line != null) {
+
+                    for (int i = 0; i < erreurs.length; i++) {
+                        System.out.println("controle des erreurs  -  " + erreurs[i]);
+                        if (line.contains(erreurs[i])) {
+
+                            codeControl = -1;
+                        }
+                    }
+
+                }
+
+                if (requis != null && line != null) {
+
+                    for (int i = 0; i < requis.length; i++) {
+                        System.out.println("controle des requis  -  " + requis[i]);
+                        if (line.contains(requis[i])) {
+
+                            codeControl = 1;
+                        }
+                    }
+
                 }
 
             }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ProgController.class.getName()).log(Level.SEVERE, null, ex);
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return 0;
 
+        return codeControl;
     }
 
 }

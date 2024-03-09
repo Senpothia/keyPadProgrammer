@@ -55,7 +55,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
     private List<String> listePortString = new ArrayList<>();
     private List<JRadioButtonMenuItem> listePorts = new ArrayList<JRadioButtonMenuItem>();
-    
+
     private ProgController progController = new ProgController();
 
     /**
@@ -157,13 +157,13 @@ public class Interface extends javax.swing.JFrame implements Observer {
             }
 
         }
-        
+
         int dirCreation = progController.createLogFolder(Constants.LOG_DIRECTORY);
-        if(dirCreation != 1){
-        
+        if (dirCreation != 1) {
+
             montrerError("Echec à la création du repertoire de logs", "Erreur d'initialisation");
             System.exit(0);
-        
+
         }
         testParamsProg();
 
@@ -801,6 +801,14 @@ public class Interface extends javax.swing.JFrame implements Observer {
                         if (comm == -1) {
 
                             alerteRS232();
+
+                        }
+
+                        if (comm == -2) {
+
+                            console.setText("Erreur de programmation");
+                            voyant.setBackground(Color.red);
+                            connecteur.envoyerData("6");
 
                         }
                     } catch (IOException ex) {

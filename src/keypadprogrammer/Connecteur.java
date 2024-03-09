@@ -35,7 +35,7 @@ public class Connecteur extends Observable {
     private int newWriteTimeout = 0;
     private ProgController progController = new ProgController();
 
-    OutputStream outputStream;
+    private OutputStream outputStream;
 
     private String inputLine;
 
@@ -248,30 +248,73 @@ public class Connecteur extends Observable {
 
             Runtime runtime = Runtime.getRuntime();
 
+            //  STARTFUS
             String commande1 = "STM32_Programmer_CLI.exe -c port=SWD -startFUS -log .\\logs\\trace1.log";
             Process startFUS = runtime.exec(commande1);
-            tempo(3000);  // 5000-> valeur validée
+            tempo(4000);  // 5000-> valeur validée
             System.out.println("Fin startFUS");
 
+            //int control1 = progController.find(".\\logs\\trace1.log", Constants.ERREURS_LOG1, null);
+            //System.out.println("code controle: " + control1);
+            // UPDATE
             String commande2 = "STM32_Programmer_CLI.exe -c port=SWD -startFUS mode=UR -ob nSWboot0=0 nboot1=1 nboot0=1 -fwupgrade " + bleLocation + " 0x080CE000 firstinstall=0 -log .\\logs\\trace2.log";
             Process upgradeBLE = runtime.exec(commande2);
             tempo(35000);  // 40000-> valeur validée
             System.out.println("Fin updateBLE");
 
+            
+            int control2 = progController.find(".\\logs\\trace2.log", null, Constants.REQUIS_LOG2);
+            System.out.println("codeControl 2: " + control2);
+
+            if (control2 == 1) {
+
+            } else {
+
+                return -2;
+
+            }
+            
+            
+            // STARTSTACK
             String commande3 = "STM32_Programmer_CLI.exe -c port=SWD -startwirelessstack -log .\\logs\\trace3.log";
             Process startStack = runtime.exec(commande3);
             tempo(3000); // 5000-> valeur validée
             System.out.println("Fin startStack");
+
+            
+            int control3 = progController.find(".\\logs\\trace3.log", null, Constants.REQUIS_LOG3);
+            System.out.println("codeControl 3: " + control3);
+            if(control3 == 1){
+                
+            }else{
+            
+                return -2;
+            
+            }
+             
             //
-            String commande4 = "STM32_Programmer_CLI.exe -c port=SWD -w" + " " + hexLocation + " 0x080CE000 -Rst -log .\\logs\\trace4.log";
+            // FIRMWARE
+            String commande4 = "STM32_Programmer_CLI.exe -c port=SWD -w " + hexLocation + " 0x080CE000 -Rst -log .\\logs\\trace4.log";
             Process programFirmware = runtime.exec(commande4);
             System.out.println("Fin programmation firmware");
+            tempo(2000);
+            
+            int control4 = progController.find(".\\logs\\trace4.log", null, Constants.REQUIS_LOG4);
+            System.out.println("codeControl 4: " + control4);
+           
+            if (control4 == 1) {
 
+            } else {
+
+                return -2;
+
+            }
+            
         } else {
 
         }
 
-        tempo(5000); // 5000 -> valeur validée
+        tempo(3000); // 5000 -> valeur validée
         programmationCompleted(new Integer(10));
         envoyerData(Constants.END_PROG);
         return 1;
