@@ -33,6 +33,7 @@ public class Connecteur extends Observable {
     private int stopBits = 1;
     private int newReadTimeout = 1000;
     private int newWriteTimeout = 0;
+    private ProgController progController = new ProgController();
 
     OutputStream outputStream;
 
@@ -107,6 +108,7 @@ public class Connecteur extends Observable {
             if (portComm.isOpen()) {
 
                 System.out.println("Connexion réussie!");
+                envoyerData(Constants.RESET_HARDWARE);
                 // return 99;
 
             } else {
@@ -194,8 +196,6 @@ public class Connecteur extends Observable {
 
         } catch (IOException e) {
 
-            // infoText.setForeground(Color.red);
-            //infoText.setText("Erreur de transmission");
             return -1;
 
         }
@@ -233,91 +233,55 @@ public class Connecteur extends Observable {
 
     }
 
-    public void program(String hexLocation, String bleLocation, boolean envVariable, String programmerLocation) {
+    public int program(String hexLocation, String bleLocation, boolean envVariable, String programmerLocation) throws IOException {
 
-        envoyerData(Constants.PROG);
-        try {
+        System.out.println("tranmission ordre relais 8");
+        int com = envoyerData(Constants.PROG);
+        if (com == -1) {
 
-            Thread.sleep(1000);
-
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+            return -1;
         }
-        Runtime runtime = Runtime.getRuntime();
-        try {
+        tempo(1000);
+        System.out.println("Fin tempo 1s");
 
-            if (envVariable) {
+        if (envVariable) {
 
-                // 
-                Process startFUS = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD -startFUS");
-                try {
+            Runtime runtime = Runtime.getRuntime();
 
-                    Thread.sleep(5000);
+            String commande1 = "STM32_Programmer_CLI.exe -c port=SWD -startFUS -log .\\logs\\trace1.log";
+            Process startFUS = runtime.exec(commande1);
+            tempo(3000);  // 5000-> valeur validée
+            System.out.println("Fin startFUS");
 
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                System.out.println("Fin startFUS");
+            String commande2 = "STM32_Programmer_CLI.exe -c port=SWD -startFUS mode=UR -ob nSWboot0=0 nboot1=1 nboot0=1 -fwupgrade " + bleLocation + " 0x080CE000 firstinstall=0 -log .\\logs\\trace2.log";
+            Process upgradeBLE = runtime.exec(commande2);
+            tempo(35000);  // 40000-> valeur validée
+            System.out.println("Fin updateBLE");
 
-                // 
-                Process upgradeBLE = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD mode=UR -ob nSWboot0=0 nboot1=1 nboot0=1 -fwupgrade" + bleLocation + " " + bleLocation + " 0x080CE000 firstinstall=0 -v");
+            String commande3 = "STM32_Programmer_CLI.exe -c port=SWD -startwirelessstack -log .\\logs\\trace3.log";
+            Process startStack = runtime.exec(commande3);
+            tempo(3000); // 5000-> valeur validée
+            System.out.println("Fin startStack");
+            //
+            String commande4 = "STM32_Programmer_CLI.exe -c port=SWD -w" + " " + hexLocation + " 0x080CE000 -Rst -log .\\logs\\trace4.log";
+            Process programFirmware = runtime.exec(commande4);
+            System.out.println("Fin programmation firmware");
 
-                try {
+        } else {
 
-                    Thread.sleep(15000);
-
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                System.out.println("Fin updateBLE");
-
-                //
-                Process startStack = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD -startwirelessstack");
-
-                try {
-
-                    Thread.sleep(5000);
-
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                System.out.println("Fin startStack");
-
-                //
-                Process programFirmware = runtime.exec("STM32_Programmer_CLI.exe -c port=SWD -w" + " " + hexLocation + " 0x08000000 -Rst");
-                System.out.println("Fin programmation firmware");
-
-            } else {
-
-            }
-
-        } catch (IOException ex) {
-            Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        try {
-
-            Thread.sleep(5000);
-
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        tempo(5000); // 5000 -> valeur validée
         programmationCompleted(new Integer(10));
         envoyerData(Constants.END_PROG);
+        return 1;
 
     }
 
     public void erase(boolean envVariable, String programmerLocation) {
 
         envoyerData(Constants.ERASE);
-        try {
-
-            Thread.sleep(1000);
-
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        tempo(1000);
 
         Runtime runtime = Runtime.getRuntime();
 
@@ -334,16 +298,22 @@ public class Connecteur extends Observable {
             Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        tempo(5000);
+
+        programmationCompleted(new Integer(50));
+        envoyerData(Constants.END_ERASE);
+
+    }
+
+    void tempo(long duree) {
+
         try {
 
-            Thread.sleep(5000);
+            Thread.sleep(duree);
 
         } catch (InterruptedException ex) {
             Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        programmationCompleted(new Integer(50));
-        envoyerData(Constants.END_ERASE);
 
     }
 

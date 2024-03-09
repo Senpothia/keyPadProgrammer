@@ -10,7 +10,8 @@ package keypadprogrammer;
  * @author Michel
  */
 public class Constants {
-
+    
+    static String RESET_HARDWARE = "0";
     static String START = "1";
     static String AQC = "4";
     static String OK = "2";
@@ -26,5 +27,7 @@ public class Constants {
     static String INTERROGATION = "@INTER:";
     static String CONFORME = "@:OK";
     static String DEFAUT = "@:KO";
+    
+    static String LOG_DIRECTORY = ".//logs";
 
 }

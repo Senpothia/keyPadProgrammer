@@ -17,6 +17,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 
@@ -52,6 +53,11 @@ public class Interface extends javax.swing.JFrame implements Observer {
     public static Initializer initializer = new Initializer();  // Charge les propriétés du fichier properties contenant les paramètres de programmation
     public static Initialisation initialisation;          // Centralise les données rapportées par l'initializer
 
+    private List<String> listePortString = new ArrayList<>();
+    private List<JRadioButtonMenuItem> listePorts = new ArrayList<JRadioButtonMenuItem>();
+    
+    private ProgController progController = new ProgController();
+
     /**
      * Creates new form Interface
      */
@@ -83,10 +89,13 @@ public class Interface extends javax.swing.JFrame implements Observer {
         binaryLocLabel.setOpaque(true);
         bleLocLabel.setOpaque(true);
 
+        activerBtnProgrammation(false);
+
         aide.getContentPane().setBackground(new Color(247, 242, 208));
 
-        List<JRadioButtonMenuItem> listePorts = new ArrayList<JRadioButtonMenuItem>();
-
+        //List<JRadioButtonMenuItem> listePorts = new ArrayList<JRadioButtonMenuItem>();
+        rechercherPortsComms();
+        /*
         List<String> listePortString = connecteur.getListPorts();
 
         for (String p : listePortString) {
@@ -96,6 +105,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
             m.addActionListener(new PortSupplier());
             menuPort.add(m);
         }
+         */
 
         initialisation = initializer.getInit();
         if (initialisation.getBinaryLocation().equals("na")) {
@@ -147,7 +157,14 @@ public class Interface extends javax.swing.JFrame implements Observer {
             }
 
         }
-
+        
+        int dirCreation = progController.createLogFolder(Constants.LOG_DIRECTORY);
+        if(dirCreation != 1){
+        
+            montrerError("Echec à la création du repertoire de logs", "Erreur d'initialisation");
+            System.exit(0);
+        
+        }
         testParamsProg();
 
     }
@@ -566,6 +583,11 @@ public class Interface extends javax.swing.JFrame implements Observer {
         });
 
         menuPort.setText("Ports");
+        menuPort.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuPortActionPerformed(evt);
+            }
+        });
         menuConnexion.add(menuPort);
 
         menuBaud.setText("Baud");
@@ -774,14 +796,30 @@ public class Interface extends javax.swing.JFrame implements Observer {
             Thread t = new Thread() {
                 public void run() {
 
-                    connecteur.program(hexLocation, bleLocation, envVariable, progLocation);
+                    try {
+                        int comm = connecteur.program(hexLocation, bleLocation, envVariable, progLocation);
+                        if (comm == -1) {
+
+                            alerteRS232();
+
+                        }
+                    } catch (IOException ex) {
+                        Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             };
             t.start();
 
         } else {
 
-            connecteur.envoyerData(Constants.OK);
+            int comm = connecteur.envoyerData(Constants.OK);
+
+            if (comm == -1) {
+
+                alerteRS232();
+
+            }
+
             console.setText("Réponse OK");
 
         }
@@ -815,7 +853,12 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
         } else {
 
-            connecteur.envoyerData(Constants.KO);
+            int comm = connecteur.envoyerData(Constants.KO);
+            if (comm == -1) {
+
+                alerteRS232();
+
+            }
             console.setText("Résultat non conforme. Test terminé!");
             voyant.setBackground(Color.RED);
             btnEffacer.setText("Effacer");
@@ -942,7 +985,13 @@ public class Interface extends javax.swing.JFrame implements Observer {
                     confirmationParams = true;
                 }
             }
-            connecteur.envoyerData("1");
+            int comm = connecteur.envoyerData("1");
+            if (comm == -1) {
+
+                alerteRS232();
+                return;
+
+            }
             testActif = true;
             auto = true;
             voyantTestEnCours(true);
@@ -951,7 +1000,14 @@ public class Interface extends javax.swing.JFrame implements Observer {
         } else {
 
             System.out.println("Acquittement");
-            connecteur.envoyerData(Constants.AQC);
+            int comm = connecteur.envoyerData(Constants.AQC);
+
+            if (comm == -1) {
+
+                alerteRS232();
+
+            }
+
             testActif = false;
             console.setText("TEST ACQUITTE - PRET POUR NOUVEAU TEST!");
             //activerBtnProgrammation();
@@ -1019,6 +1075,12 @@ public class Interface extends javax.swing.JFrame implements Observer {
             btnTester.setEnabled(true);
             btnTester.setBackground(new Color(163, 194, 240));
             btnTester.setOpaque(true);
+            btnProg.setEnabled(true);
+            btnProg.setBackground(new Color(163, 194, 240));
+            btnProg.setOpaque(true);
+            btnEffacer.setEnabled(true);
+            btnEffacer.setBackground(new Color(163, 194, 240));
+            btnEffacer.setOpaque(true);
 
         } else {
 
@@ -1028,6 +1090,12 @@ public class Interface extends javax.swing.JFrame implements Observer {
             btnTester.setEnabled(false);
             btnTester.setBackground(Color.GRAY);
             btnTester.setOpaque(true);
+            btnProg.setEnabled(false);
+            btnProg.setBackground(Color.GRAY);
+            btnProg.setOpaque(true);
+            btnEffacer.setEnabled(false);
+            btnEffacer.setBackground(Color.GRAY);
+            btnEffacer.setOpaque(true);
 
         }
 
@@ -1049,12 +1117,14 @@ public class Interface extends javax.swing.JFrame implements Observer {
             btnTester.setBackground(Color.GRAY);
             btnTester.setOpaque(true);
             setEnabledMenusConfiguration();
+            activerBtnProgrammation(false);
 
         }
     }//GEN-LAST:event_btnDeconnexionActionPerformed
 
     private void menuConnexionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuConnexionActionPerformed
 
+        rechercherPortsComms();
 
     }//GEN-LAST:event_menuConnexionActionPerformed
 
@@ -1078,6 +1148,10 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
         testParamsProg();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void menuPortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPortActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuPortActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1279,22 +1353,27 @@ public class Interface extends javax.swing.JFrame implements Observer {
         if (connexionRS232Active) {
 
             statutRs232.setBackground(Color.GREEN);
+            activerBtnProgrammation(true);
+            /*
             btnDeconnexion.setEnabled(true);
             btnConnexion.setEnabled(false);
             btnTester.setText("TESTER");
             btnTester.setEnabled(true);
             btnTester.setBackground(new Color(163, 194, 240));
             btnTester.setOpaque(true);
-
+             */
         } else {
 
             statutRs232.setBackground(Color.red);
+            activerBtnProgrammation(false);
+            /*
             btnDeconnexion.setEnabled(false);
             btnConnexion.setEnabled(true);
             btnTester.setText("TESTER");
             btnTester.setEnabled(false);
             btnTester.setBackground(Color.GRAY);
             btnTester.setOpaque(true);
+             */
         }
 
     }
@@ -1409,7 +1488,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 System.out.println("test manuel acquitté1");
                 messageConsole("FIN TEST MANUEL");
                 voyant.setBackground(Color.GRAY);
-                activerBtnProgrammation();
+                activerBtnProgrammation(true);
 
             }
 
@@ -1428,7 +1507,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
                 System.out.println("programmation terminée");
                 messageConsole(inputLine.trim());
-                activerBtnProgrammation();
+                activerBtnProgrammation(true);
                 voyantTestEnCours(false);
                 System.out.println("testActif  =" + testActif);
 
@@ -1438,7 +1517,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
                 System.out.println("effacement terminé");
                 messageConsole(inputLine.trim());
-                activerBtnProgrammation();
+                activerBtnProgrammation(true);
                 voyantTestEnCours(false);
                 System.out.println("testActif  =" + testActif);
 
@@ -1451,7 +1530,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 System.out.println("test manuel acquitté2");
                 messageConsole("FIN TEST MANUEL");
                 voyant.setBackground(Color.GRAY);
-                activerBtnProgrammation();
+                activerBtnProgrammation(true);
 
             }
         }
@@ -1460,7 +1539,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
             messageConsole("TEST ACQUITTE");
             voyant.setBackground(Color.GRAY);
-            activerBtnProgrammation();
+            activerBtnProgrammation(true);
 
         }
 
@@ -1550,22 +1629,41 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
     }
 
-    private void activerBtnProgrammation() {
+    private void activerBtnProgrammation(boolean active) {
 
-        btnTester.setText("TESTER");
-        btnTester.setEnabled(true);
-        btnTester.setBackground(new Color(163, 194, 240));
+        if (active) {
 
-        btnProg.setText("PROGRAMMER");
-        btnProg.setEnabled(true);
-        btnProg.setBackground(new Color(163, 194, 240));
+            btnTester.setText("TESTER");
+            btnTester.setEnabled(true);
+            btnTester.setBackground(new Color(163, 194, 240));
 
-        btnEffacer.setText("EFFACER");
-        btnEffacer.setEnabled(true);
-        btnEffacer.setBackground(new Color(163, 194, 240));
-        testActif = false;
-        auto = true;
+            btnProg.setText("PROGRAMMER");
+            btnProg.setEnabled(true);
+            btnProg.setBackground(new Color(163, 194, 240));
 
+            btnEffacer.setText("EFFACER");
+            btnEffacer.setEnabled(true);
+            btnEffacer.setBackground(new Color(163, 194, 240));
+            testActif = false;
+            auto = true;
+
+        } else {
+
+            btnTester.setText("TESTER");
+            btnTester.setEnabled(false);
+            btnTester.setBackground(Color.GRAY);
+
+            btnProg.setText("PROGRAMMER");
+            btnProg.setEnabled(false);
+            btnProg.setBackground(Color.GRAY);
+
+            btnEffacer.setText("EFFACER");
+            btnEffacer.setEnabled(false);
+            btnEffacer.setBackground(Color.GRAY);
+            testActif = false;
+            auto = false;
+
+        }
     }
 
     private void tempo(long duree) {
@@ -1613,6 +1711,57 @@ public class Interface extends javax.swing.JFrame implements Observer {
             voyant.setBackground(Color.GREEN);
             voyant.setOpaque(true);
 
+        }
+
+    }
+
+    private void alerteRS232() {
+
+        int i = connecteur.disconnect();
+        if (i == 0) {
+
+            console.setForeground(Color.BLUE);
+            console.setText("La connexion a été perdue! Vous devez la rétablir.");
+            setStatusRS232(false);
+            btnConnexion.setEnabled(true);
+            btnDeconnexion.setEnabled(false);
+            connexionRS232Active = false;
+            btnTester.setEnabled(false);
+            btnTester.setBackground(Color.GRAY);
+            btnTester.setOpaque(true);
+            setEnabledMenusConfiguration();
+            testActif = false;
+            auto = false;
+            activerBtnProgrammation(false);
+            voyantTestEnCours(false);
+
+        }
+
+        montrerError("La connexion RS-232 a été perdue!\n Vérifer la connexion RS-232 et appuyer sur OK\n L'application va redémarrer", "Défaut de connexion");
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            runtime.exec("java -jar keypadProgrammer.jar");
+            System.exit(0);
+
+        } catch (IOException ex) {
+            Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void rechercherPortsComms() {
+
+        menuPort.removeAll();
+
+        listePorts.clear();
+        listePortString.clear();
+        listePortString = connecteur.getListPorts();
+
+        for (String p : listePortString) {
+
+            JRadioButtonMenuItem m = new JRadioButtonMenuItem(p);
+            groupPorts.add(m);
+            m.addActionListener(new PortSupplier());
+            menuPort.add(m);
         }
 
     }

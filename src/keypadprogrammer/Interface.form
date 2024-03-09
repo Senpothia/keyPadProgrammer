@@ -446,6 +446,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Ports"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuPortActionPerformed"/>
+              </Events>
             </Menu>
             <Menu class="javax.swing.JMenu" name="menuBaud">
               <Properties>
