@@ -41,12 +41,7 @@ public class ProgController {
     public int find(String logfile, String[] erreurs, String[] requis) {
 
         int codeControl = 0;
-        /*
-        for (int i = 0; i < erreurs.length; i++) {
-
-                System.out.println(erreurs[i]);
-            }
-         */
+      
         try {
             // Création d'un fileReader pour lire le fichier
             FileReader fileReader = new FileReader(logfile);

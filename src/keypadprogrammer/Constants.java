@@ -41,8 +41,6 @@ public class Constants {
     // REQUIS TRACE1
     //********************************************************************************************************
     // ERREURS TRACE2
-    
-    
     // REQUIS TRACE2
     static String R1_LOG2 = "Success with Time elapsed during Reconnect:";
     static String R2_LOG2 = "Firmware Upgrade Success";
@@ -51,8 +49,6 @@ public class Constants {
 
     //********************************************************************************************************
     // ERREURS TRACE3
-    
-    
     // REQUIS TRACE3
     static String R1_LOG3 = "Success with Time elapsed during Reconnect:";
     static String R2_LOG3 = "FusStartWS activated successfully";
@@ -61,15 +57,29 @@ public class Constants {
     static String[] REQUIS_LOG3 = {R1_LOG3, R2_LOG3, R3_LOG3};
 
     //********************************************************************************************************
-    
     // ERREURS TRACE4
-    
-    
     // REQUIS TRACE4
     static String R1_LOG4 = "File download complete";
     static String R2_LOG4 = "Software reset is performed";
-   
+
     static String[] REQUIS_LOG4 = {R1_LOG4, R2_LOG4};
 
     //********************************************************************************************************
+    
+    // Message de communication état de la programmation BLE vers automate
+    
+    static String ERR_ET1 = "e";
+    static String ERR_ET2 = "f";
+    static String ERR_ET3 = "g";
+    static String ERR_ET4 = "h";
+
+    static String OK_ET1 = "r";
+    static String OK_ET2 = "s";
+    static String OK_ET3 = "t";
+    static String OK_ET4 = "u";
+    
+    // Message d'acquittement del'état de la programmation BLE de l'automate vers l'IHM
+    
+    
+    
 }

@@ -262,54 +262,60 @@ public class Connecteur extends Observable {
             tempo(35000);  // 40000-> valeur validée
             System.out.println("Fin updateBLE");
 
-            
             int control2 = progController.find(".\\logs\\trace2.log", null, Constants.REQUIS_LOG2);
             System.out.println("codeControl 2: " + control2);
 
             if (control2 == 1) {
 
+                envoyerData("s");
+
             } else {
 
+                envoyerData("f");
                 return -2;
 
             }
-            
-            
+
             // STARTSTACK
             String commande3 = "STM32_Programmer_CLI.exe -c port=SWD -startwirelessstack -log .\\logs\\trace3.log";
             Process startStack = runtime.exec(commande3);
             tempo(3000); // 5000-> valeur validée
             System.out.println("Fin startStack");
 
-            
             int control3 = progController.find(".\\logs\\trace3.log", null, Constants.REQUIS_LOG3);
             System.out.println("codeControl 3: " + control3);
-            if(control3 == 1){
-                
-            }else{
-            
+            if (control3 == 1) {
+
+                envoyerData("t");
+
+            } else {
+
+                envoyerData("g");
                 return -2;
-            
+
             }
-             
+
             //
             // FIRMWARE
             String commande4 = "STM32_Programmer_CLI.exe -c port=SWD -w " + hexLocation + " 0x080CE000 -Rst -log .\\logs\\trace4.log";
             Process programFirmware = runtime.exec(commande4);
             System.out.println("Fin programmation firmware");
             tempo(2000);
-            
+
             int control4 = progController.find(".\\logs\\trace4.log", null, Constants.REQUIS_LOG4);
             System.out.println("codeControl 4: " + control4);
-           
+
             if (control4 == 1) {
+
+                envoyerData("u");
 
             } else {
 
+                envoyerData("h");
                 return -2;
 
             }
-            
+
         } else {
 
         }

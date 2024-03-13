@@ -664,10 +664,6 @@
                       <Component id="btnTester" min="-2" pref="114" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="104" max="-2" attributes="0"/>
-                      <Component id="console" min="-2" pref="651" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="327" max="-2" attributes="0"/>
                       <Component id="voyant" min="-2" pref="160" max="-2" attributes="0"/>
                   </Group>
@@ -676,10 +672,10 @@
                       <Component id="titre" min="-2" pref="524" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="108" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="107" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="version" min="-2" max="-2" attributes="0"/>
@@ -693,6 +689,13 @@
                           <Component id="statutPGRM" alignment="1" min="-2" pref="55" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="barProgress" alignment="1" min="-2" pref="651" max="-2" attributes="0"/>
+                          <Component id="console" min="-2" pref="651" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="105" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -719,9 +722,13 @@
               </Group>
               <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
               <Component id="voyant" min="-2" pref="122" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
+              <Component id="barProgress" min="-2" pref="29" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+              <Component id="console" min="-2" pref="47" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btnEffacer" alignment="3" min="-2" pref="39" max="-2" attributes="0"/>
                           <Component id="btnProg" alignment="3" min="-2" pref="41" max="-2" attributes="0"/>
@@ -730,9 +737,6 @@
                       <EmptySpace min="-2" pref="71" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
-                      <Component id="console" min="-2" pref="47" max="-2" attributes="0"/>
-                      <EmptySpace pref="105" max="32767" attributes="0"/>
                       <Component id="version" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
                   </Group>
@@ -862,6 +866,8 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="statutPGRM">
+    </Component>
+    <Component class="javax.swing.JProgressBar" name="barProgress">
     </Component>
   </SubComponents>
 </Form>
