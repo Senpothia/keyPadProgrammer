@@ -31,6 +31,23 @@ public class Constants {
 
     static String LOG_DIRECTORY = ".//logs";
 
+    // Signalisation état de programmation 
+    static Integer PROG_SUCCESS = 10;
+    static Integer PROG_START = 77;
+
+    static Integer PROG_SUCCESS_ETAPE1 = 11;
+    static Integer PROG_SUCCESS_ETAPE2 = 12;
+    static Integer PROG_SUCCESS_ETAPE3 = 13;
+    static Integer PROG_SUCCESS_ETAPE4 = 14;
+
+    static Integer PROG_UNSUCCESS_ETAPE1 = 91;
+    static Integer PROG_UNSUCCESS_ETAPE2 = 92;
+    static Integer PROG_UNSUCCESS_ETAPE3 = 93;
+    static Integer PROG_UNSUCCESS_ETAPE4 = 94;
+
+    static Integer ERASE_SUCCESS = 50;
+    static Integer ERASE_UNSUCCESS = 55;
+
     //********************************************************************************************************
     // ERREURS TRACE1
     static String E1_LOG1 = "Error: FUS_STATE_ERR_UNKNOWN: Unknown error";
@@ -41,8 +58,6 @@ public class Constants {
     // REQUIS TRACE1
     //********************************************************************************************************
     // ERREURS TRACE2
-    
-    
     // REQUIS TRACE2
     static String R1_LOG2 = "Success with Time elapsed during Reconnect:";
     static String R2_LOG2 = "Firmware Upgrade Success";
@@ -51,8 +66,6 @@ public class Constants {
 
     //********************************************************************************************************
     // ERREURS TRACE3
-    
-    
     // REQUIS TRACE3
     static String R1_LOG3 = "Success with Time elapsed during Reconnect:";
     static String R2_LOG3 = "FusStartWS activated successfully";
@@ -61,14 +74,11 @@ public class Constants {
     static String[] REQUIS_LOG3 = {R1_LOG3, R2_LOG3, R3_LOG3};
 
     //********************************************************************************************************
-    
     // ERREURS TRACE4
-    
-    
     // REQUIS TRACE4
     static String R1_LOG4 = "File download complete";
     static String R2_LOG4 = "Software reset is performed";
-   
+
     static String[] REQUIS_LOG4 = {R1_LOG4, R2_LOG4};
 
     //********************************************************************************************************

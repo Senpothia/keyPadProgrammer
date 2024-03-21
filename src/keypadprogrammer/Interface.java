@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.UIManager;
 
 /**
  *
@@ -48,6 +49,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
     private boolean connexionRS232Active = false;       // état de la connexion RS-232
 
     private boolean testActif = false;
+    private boolean programmationActive = false;
     private boolean auto = true;
 
     public static Initializer initializer = new Initializer();  // Charge les propriétés du fichier properties contenant les paramètres de programmation
@@ -165,6 +167,17 @@ public class Interface extends javax.swing.JFrame implements Observer {
             System.exit(0);
 
         }
+
+        /*
+        UIManager.put("ProgressBar.selectionBackground", Color.BLUE);
+        UIManager.put("ProgressBar.selectionForeground", Color.WHITE);
+        UIManager.put("ProgressBar.selectionBackground", Color.red);
+        UIManager.put("ProgressBar.selectionForeground", Color.green);
+         */
+        progBarre.setStringPainted(true);
+        progBarre.setForeground(Color.blue);
+        progBarre.setOpaque(true);
+        progBarre.setVisible(false);
         testParamsProg();
 
     }
@@ -207,6 +220,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
         titre = new javax.swing.JLabel();
         btnProg = new javax.swing.JButton();
         btnEffacer = new javax.swing.JButton();
@@ -218,6 +232,8 @@ public class Interface extends javax.swing.JFrame implements Observer {
         StatutRS232Lab = new javax.swing.JLabel();
         statutPRGLabel = new javax.swing.JLabel();
         statutPGRM = new javax.swing.JLabel();
+        progBarre = new javax.swing.JProgressBar();
+        testBarre = new javax.swing.JProgressBar();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuParametres = new javax.swing.JMenu();
         menuVoir = new javax.swing.JMenuItem();
@@ -496,7 +512,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
         voyant.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        statutRs232.setText("jLabel4");
+        statutRs232.setText("rs-232");
 
         console.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         console.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -515,7 +531,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
             }
         });
 
-        version.setText("V1.0");
+        version.setText("V2.0");
 
         StatutRS232Lab.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         StatutRS232Lab.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -524,6 +540,16 @@ public class Interface extends javax.swing.JFrame implements Observer {
         statutPRGLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         statutPRGLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         statutPRGLabel.setText("PGRM");
+
+        progBarre.setFont(new java.awt.Font("Tahoma", 3, 14)); // NOI18N
+        progBarre.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        progBarre.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        progBarre.setOpaque(true);
+        progBarre.setStringPainted(true);
+
+        testBarre.setFont(new java.awt.Font("Tahoma", 3, 14)); // NOI18N
+        testBarre.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        testBarre.setStringPainted(true);
 
         menuParametres.setText("Paramètres");
         menuParametres.addActionListener(new java.awt.event.ActionListener() {
@@ -705,71 +731,74 @@ public class Interface extends javax.swing.JFrame implements Observer {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(157, 157, 157)
-                        .addComponent(btnEffacer, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(53, 53, 53)
-                        .addComponent(btnProg, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(39, 39, 39)
-                        .addComponent(btnTester, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(104, 104, 104)
-                        .addComponent(console, javax.swing.GroupLayout.PREFERRED_SIZE, 651, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(327, 327, 327)
-                        .addComponent(voyant, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(155, 155, 155)
-                        .addComponent(titre, javax.swing.GroupLayout.PREFERRED_SIZE, 524, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(108, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addContainerGap(159, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(version)
                         .addGap(22, 22, 22))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(StatutRS232Lab, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(statutRs232, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(statutPRGLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(statutPGRM, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(statutPGRM, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(titre, javax.swing.GroupLayout.PREFERRED_SIZE, 524, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(89, 89, 89)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(StatutRS232Lab, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(statutRs232, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(statutPRGLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(36, 36, 36))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(339, 339, 339)
+                .addComponent(voyant, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(100, 100, 100)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(progBarre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(console, javax.swing.GroupLayout.DEFAULT_SIZE, 651, Short.MAX_VALUE)
+                            .addComponent(testBarre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(139, 139, 139)
+                        .addComponent(btnEffacer, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(81, 81, 81)
+                        .addComponent(btnProg, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(69, 69, 69)
+                        .addComponent(btnTester, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(32, 32, 32)
-                .addComponent(StatutRS232Lab)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(statutRs232, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(titre, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(statutPRGLabel)
+                        .addComponent(StatutRS232Lab)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(statutPGRM, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(33, 33, 33)
+                        .addComponent(statutRs232, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(statutPRGLabel))
+                    .addComponent(titre, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(statutPGRM, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
                 .addComponent(voyant, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnEffacer, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnProg, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnTester, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(71, 71, 71))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(57, 57, 57)
-                        .addComponent(console, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
-                        .addComponent(version)
-                        .addGap(19, 19, 19))))
+                .addGap(54, 54, 54)
+                .addComponent(testBarre, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(progBarre, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(console, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEffacer, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnProg, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnTester, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(39, 39, 39)
+                .addComponent(version)
+                .addGap(18, 18, 18))
         );
 
         pack();
@@ -784,6 +813,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 if (!confirmation) {
 
                     return;
+                    
                 } else {
 
                     confirmationParams = true;
@@ -791,6 +821,8 @@ public class Interface extends javax.swing.JFrame implements Observer {
             }
 
             console.setText("Programmation en cours");
+            programmationActive = true;
+            progBarre.setVisible(true);
             voyant.setBackground(Color.YELLOW);
 
             Thread t = new Thread() {
@@ -811,6 +843,17 @@ public class Interface extends javax.swing.JFrame implements Observer {
                             connecteur.envoyerData("6");
 
                         }
+
+                        if (comm == 1) {
+
+                            console.setText("Programmation terminée!");
+                            voyant.setBackground(Color.GREEN);
+                            connecteur.envoyerData("9");
+
+                        }
+                        
+                        programmationActive = true;
+
                     } catch (IOException ex) {
                         Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -979,9 +1022,32 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
     private void btnTesterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTesterActionPerformed
 
+        if (programmationActive) {
+
+            System.out.println("Acquittement");
+            int comm = connecteur.envoyerData(Constants.AQC);
+
+            if (comm == -1) {
+
+                alerteRS232();
+
+            }
+
+            testActif = false;
+            console.setText("Programmation acquittée");
+            
+            //testParamsProg();
+            voyantTestEnCours(false);
+            activerBtnProgrammation(true);
+            progBarre.setVisible(false);
+            programmationActive = false;
+            return;
+
+        }
         if (!testActif) {
 
             System.out.println("Démarrage");
+            progBarre.setVisible(false);
             if (!confirmationParams) {
 
                 boolean confirmation = confirmeParams();
@@ -1021,6 +1087,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
             //activerBtnProgrammation();
             testParamsProg();
             voyantTestEnCours(false);
+            progBarre.setVisible(false);
 
         }
 
@@ -1240,6 +1307,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
@@ -1259,6 +1327,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
     private javax.swing.JRadioButtonMenuItem parityEven;
     private javax.swing.JRadioButtonMenuItem parityNone;
     private javax.swing.JRadioButtonMenuItem parityOdd;
+    private javax.swing.JProgressBar progBarre;
     private javax.swing.JLabel progLocLabel;
     private javax.swing.JFileChooser programmerLoc;
     private javax.swing.JLabel statutPGRM;
@@ -1266,6 +1335,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel statutRs232;
     private javax.swing.JRadioButtonMenuItem stop1;
     private javax.swing.JRadioButtonMenuItem stop2;
+    private javax.swing.JProgressBar testBarre;
     private javax.swing.JLabel titre;
     private javax.swing.JLabel titreLabBLE;
     private javax.swing.JLabel titreLabHex;
@@ -1362,26 +1432,12 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
             statutRs232.setBackground(Color.GREEN);
             activerBtnProgrammation(true);
-            /*
-            btnDeconnexion.setEnabled(true);
-            btnConnexion.setEnabled(false);
-            btnTester.setText("TESTER");
-            btnTester.setEnabled(true);
-            btnTester.setBackground(new Color(163, 194, 240));
-            btnTester.setOpaque(true);
-             */
+           
         } else {
 
             statutRs232.setBackground(Color.red);
             activerBtnProgrammation(false);
-            /*
-            btnDeconnexion.setEnabled(false);
-            btnConnexion.setEnabled(true);
-            btnTester.setText("TESTER");
-            btnTester.setEnabled(false);
-            btnTester.setBackground(Color.GRAY);
-            btnTester.setOpaque(true);
-             */
+           
         }
 
     }
@@ -1422,16 +1478,97 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
         if (arg instanceof Integer) {
 
-            if ((Integer) arg == 10) {
+            if ((Integer) arg == Constants.PROG_SUCCESS) {
 
                 voyant.setBackground(Color.GREEN);
+                progBarre.setValue(100);
                 console.setText("Programmation terminée!");
             }
 
-            if ((Integer) arg == 50) {
+            if ((Integer) arg == Constants.ERASE_SUCCESS) {
 
                 voyant.setBackground(Color.GREEN);
+                progBarre.setValue(100);
                 console.setText("Effacement terminée!");
+            }
+
+            if ((Integer) arg == Constants.PROG_START) {
+
+                voyant.setBackground(Color.YELLOW);
+                progBarre.setStringPainted(true);
+                progBarre.setString("Programmation en cours...");
+                progBarre.setValue(0);
+                console.setText("Programmation en cours");
+            }
+
+            if ((Integer) arg == Constants.PROG_SUCCESS_ETAPE1) {
+
+                voyant.setBackground(Color.YELLOW);
+                progBarre.setStringPainted(true);
+                progBarre.setString("Programmation en cours...");
+                progBarre.setValue(25);
+                console.setText("Programmation: étape 1 terminée!");
+            }
+
+            if ((Integer) arg == Constants.PROG_SUCCESS_ETAPE2) {
+
+                voyant.setBackground(Color.YELLOW);
+                progBarre.setStringPainted(true);
+                progBarre.setString("Programmation en cours...");
+                progBarre.setValue(50);
+                console.setText("Programmation: étape 2 terminée!");
+            }
+
+            if ((Integer) arg == Constants.PROG_SUCCESS_ETAPE3) {
+
+                voyant.setBackground(Color.YELLOW);
+                progBarre.setStringPainted(true);
+                progBarre.setString("Programmation en cours...");
+                progBarre.setValue(75);
+                console.setText("Programmation: étape 3 terminée!");
+            }
+
+            if ((Integer) arg == Constants.PROG_SUCCESS_ETAPE4) {
+
+                voyant.setBackground(Color.GREEN);
+                progBarre.setString("Programmation terminée!");
+                progBarre.setStringPainted(true);
+                progBarre.setValue(100);
+                console.setText("Programmation: étape 4 terminée! - Le test est en cours");
+                activerBtnAcquittement(true);
+                //int comm = connecteur.envoyerData(Constants.START);
+            }
+
+            if ((Integer) arg == Constants.PROG_UNSUCCESS_ETAPE1) {
+
+                voyant.setBackground(Color.RED);
+                progBarre.setString("Echec programmation!");
+                progBarre.setStringPainted(true);
+                console.setText("Programmation: échec étape 1!");
+            }
+
+            if ((Integer) arg == Constants.PROG_UNSUCCESS_ETAPE2) {
+
+                voyant.setBackground(Color.RED);
+                progBarre.setString("Echec programmation!");
+                progBarre.setStringPainted(true);
+                console.setText("Programmation: échec étape 2!");
+            }
+
+            if ((Integer) arg == Constants.PROG_UNSUCCESS_ETAPE3) {
+
+                voyant.setBackground(Color.RED);
+                progBarre.setString("Echec programmation!");
+                progBarre.setStringPainted(true);
+                console.setText("Programmation: échec étape 3!");
+            }
+
+            if ((Integer) arg == Constants.PROG_UNSUCCESS_ETAPE4) {
+
+                voyant.setBackground(Color.RED);
+                progBarre.setString("Echec programmation!");
+                progBarre.setStringPainted(true);
+                console.setText("Programmation: échec étape 4!");
             }
 
         } else {
@@ -1515,8 +1652,9 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
                 System.out.println("programmation terminée");
                 messageConsole(inputLine.trim());
-                activerBtnProgrammation(true);
-                voyantTestEnCours(false);
+                //activerBtnProgrammation(true);
+                activerBtnAcquittement(true);
+                //voyantTestEnCours(false);
                 System.out.println("testActif  =" + testActif);
 
             }
