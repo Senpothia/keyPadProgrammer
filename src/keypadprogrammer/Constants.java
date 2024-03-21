@@ -5,6 +5,9 @@
  */
 package keypadprogrammer;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Michel
@@ -82,4 +85,17 @@ public class Constants {
     static String[] REQUIS_LOG4 = {R1_LOG4, R2_LOG4};
 
     //********************************************************************************************************
+    
+      static void tempo(long duree) {
+
+        try {
+
+            Thread.sleep(duree);
+
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
 }

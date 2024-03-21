@@ -97,17 +97,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
         //List<JRadioButtonMenuItem> listePorts = new ArrayList<JRadioButtonMenuItem>();
         rechercherPortsComms();
-        /*
-        List<String> listePortString = connecteur.getListPorts();
-
-        for (String p : listePortString) {
-
-            JRadioButtonMenuItem m = new JRadioButtonMenuItem(p);
-            groupPorts.add(m);
-            m.addActionListener(new PortSupplier());
-            menuPort.add(m);
-        }
-         */
 
         initialisation = initializer.getInit();
         if (initialisation.getBinaryLocation().equals("na")) {
@@ -178,6 +167,11 @@ public class Interface extends javax.swing.JFrame implements Observer {
         progBarre.setForeground(Color.blue);
         progBarre.setOpaque(true);
         progBarre.setVisible(false);
+        testBarre.setStringPainted(true);
+        testBarre.setForeground(Color.blue);
+        testBarre.setOpaque(true);
+        testBarre.setVisible(false);
+        
         testParamsProg();
 
     }
@@ -813,7 +807,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 if (!confirmation) {
 
                     return;
-                    
+
                 } else {
 
                     confirmationParams = true;
@@ -823,6 +817,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
             console.setText("Programmation en cours");
             programmationActive = true;
             progBarre.setVisible(true);
+            testBarre.setVisible(true);
             voyant.setBackground(Color.YELLOW);
 
             Thread t = new Thread() {
@@ -830,6 +825,13 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
                     try {
                         int comm = connecteur.program(hexLocation, bleLocation, envVariable, progLocation);
+
+                        comm = connecteur.envoyerData(Constants.AQC);
+                        Constants.tempo(1000);
+                        comm = connecteur.envoyerData(Constants.START);
+                        testActif = true;
+                        programmationActive = false;
+
                         if (comm == -1) {
 
                             alerteRS232();
@@ -841,6 +843,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
                             console.setText("Erreur de programmation");
                             voyant.setBackground(Color.red);
                             connecteur.envoyerData("6");
+                            programmationActive = true;
 
                         }
 
@@ -849,11 +852,11 @@ public class Interface extends javax.swing.JFrame implements Observer {
                             console.setText("Programmation terminée!");
                             voyant.setBackground(Color.GREEN);
                             connecteur.envoyerData("9");
+                            programmationActive = true;
 
                         }
-                        
-                        programmationActive = true;
 
+                        // programmationActive = true;
                     } catch (IOException ex) {
                         Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -1035,7 +1038,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
             testActif = false;
             console.setText("Programmation acquittée");
-            
+
             //testParamsProg();
             voyantTestEnCours(false);
             activerBtnProgrammation(true);
@@ -1432,12 +1435,12 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
             statutRs232.setBackground(Color.GREEN);
             activerBtnProgrammation(true);
-           
+
         } else {
 
             statutRs232.setBackground(Color.red);
             activerBtnProgrammation(false);
-           
+
         }
 
     }
@@ -1535,8 +1538,15 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 progBarre.setStringPainted(true);
                 progBarre.setValue(100);
                 console.setText("Programmation: étape 4 terminée! - Le test est en cours");
-                activerBtnAcquittement(true);
-                //int comm = connecteur.envoyerData(Constants.START);
+                //activerBtnAcquittement(true);
+
+                /*
+                int comm = connecteur.envoyerData(Constants.AQC);
+                Constants.tempo(1000);
+                comm = connecteur.envoyerData(Constants.START);
+                testActif = true;
+                programmationActive = false;
+                 */
             }
 
             if ((Integer) arg == Constants.PROG_UNSUCCESS_ETAPE1) {
@@ -1809,19 +1819,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
             testActif = false;
             auto = false;
 
-        }
-    }
-
-    private void tempo(long duree) {
-
-        System.out.println("keypadprogrammer.Interface.tempo()");
-        LocalDateTime start = LocalDateTime.now();
-        LocalDateTime after = LocalDateTime.now();
-        while (after.isBefore(start.plusSeconds(duree))) {
-
-            after = LocalDateTime.now();
-            console.setText("Effacement demandé");
-            voyant.setBackground(Color.YELLOW);
         }
     }
 
