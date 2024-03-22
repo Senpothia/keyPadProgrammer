@@ -663,30 +663,25 @@
               <EmptySpace max="32767" attributes="0"/>
           </Group>
           <Group type="102" attributes="0">
-              <Group type="103" groupAlignment="0" attributes="0">
+              <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="progBarre" max="32767" attributes="0"/>
-                          <Component id="console" pref="651" max="32767" attributes="0"/>
-                          <Component id="testBarre" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="btnNOK" min="-2" pref="114" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
+                      <Component id="btnLancer" min="-2" pref="173" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="btnOK" min="-2" pref="114" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
+                      <Component id="btnACQ" min="-2" pref="114" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="124" max="-2" attributes="0"/>
-                      <Component id="btnTester2" min="-2" pref="114" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
-                      <Component id="btnProg1" min="-2" pref="173" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                      <Component id="btnTester1" min="-2" pref="114" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-                      <Component id="btnTester3" min="-2" pref="114" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="progBarre" max="32767" attributes="0"/>
+                  <Component id="console" pref="651" max="32767" attributes="0"/>
+                  <Component id="testBarre" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace min="0" pref="91" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="149" max="32767" attributes="0"/>
               <Component id="btnEffacer" min="-2" pref="116" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
               <Component id="btnProg" min="-2" pref="173" max="-2" attributes="0"/>
@@ -748,10 +743,10 @@
                       <Component id="console" min="-2" pref="47" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="btnTester2" alignment="3" min="-2" pref="41" max="-2" attributes="0"/>
-                          <Component id="btnProg1" alignment="3" min="-2" pref="41" max="-2" attributes="0"/>
-                          <Component id="btnTester1" alignment="3" min="-2" pref="41" max="-2" attributes="0"/>
-                          <Component id="btnTester3" alignment="3" min="-2" pref="41" max="-2" attributes="0"/>
+                          <Component id="btnNOK" alignment="3" min="-2" pref="41" max="-2" attributes="0"/>
+                          <Component id="btnLancer" alignment="3" min="-2" pref="41" max="-2" attributes="0"/>
+                          <Component id="btnOK" alignment="3" min="-2" pref="41" max="-2" attributes="0"/>
+                          <Component id="btnACQ" alignment="3" min="-2" pref="41" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="40" pref="87" max="32767" attributes="0"/>
                   </Group>
@@ -832,6 +827,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="statutRs232">
       <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="text" type="java.lang.String" value="rs-232"/>
       </Properties>
     </Component>
@@ -892,6 +888,10 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="statutPGRM">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="prgm"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JProgressBar" name="progBarre">
       <Properties>
@@ -923,7 +923,7 @@
         <Property name="stringPainted" type="boolean" value="true"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="btnProg1">
+    <Component class="javax.swing.JButton" name="btnLancer">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -939,10 +939,10 @@
         <Property name="contentAreaFilled" type="boolean" value="false"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnProg1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLancerActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="btnTester1">
+    <Component class="javax.swing.JButton" name="btnOK">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -958,10 +958,10 @@
         <Property name="contentAreaFilled" type="boolean" value="false"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTester1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOKActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="btnTester2">
+    <Component class="javax.swing.JButton" name="btnNOK">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -977,10 +977,10 @@
         <Property name="contentAreaFilled" type="boolean" value="false"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTester2ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNOKActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="btnTester3">
+    <Component class="javax.swing.JButton" name="btnACQ">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -996,7 +996,7 @@
         <Property name="contentAreaFilled" type="boolean" value="false"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTester3ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnACQActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
