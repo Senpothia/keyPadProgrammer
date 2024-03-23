@@ -51,6 +51,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
     private boolean testActif = false;
     private boolean programmationActive = false;
     private boolean auto = true;
+    private boolean AttenteReponseOperateur = false;
 
     public static Initializer initializer = new Initializer();  // Charge les propriétés du fichier properties contenant les paramètres de programmation
     public static Initialisation initialisation;          // Centralise les données rapportées par l'initializer
@@ -1291,7 +1292,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
             }
         }
 
-        activerBtnTestEnCours();
+        inhibBtn();
         console.setText("Programmation en cours");
         programmationActive = true;
         progBarre.setVisible(true);
@@ -1330,7 +1331,8 @@ public class Interface extends javax.swing.JFrame implements Observer {
                     }
 
                     if (comm == 1) {
-
+                        
+                        
                         console.setText("Programmation terminée!");
                         // voyant.setBackground(Color.GREEN);
                         connecteur.envoyerData(Constants.END_PROG);
@@ -1340,6 +1342,9 @@ public class Interface extends javax.swing.JFrame implements Observer {
                         comm = connecteur.envoyerData(Constants.AQC);
                         Constants.tempo(1000);
                         comm = connecteur.envoyerData(Constants.START);
+                        activerBtnTestEnCours();
+                        testBarre.setStringPainted(true);
+                        testBarre.setString("Test en cours...");
 
                     }
 
@@ -1356,6 +1361,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
     private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOKActionPerformed
 
+        AttenteReponseOperateur = false;
         int comm = connecteur.envoyerData(Constants.OK);
 
         if (comm == -1) {
@@ -1370,6 +1376,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
     private void btnNOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNOKActionPerformed
 
+        AttenteReponseOperateur = false;
         int comm = connecteur.envoyerData(Constants.KO);
         if (comm == -1) {
 
@@ -1407,6 +1414,13 @@ public class Interface extends javax.swing.JFrame implements Observer {
         //activerBtnProgrammation();
         testParamsProg();
         voyantTestEnCours(false);
+        progBarre.setValue(0);
+        progBarre.setString("En attente lancement de programmation");
+        progBarre.setStringPainted(true);
+        testBarre.setValue(0);
+        testBarre.setString("Test en attente de démarrage");
+        testBarre.setStringPainted(true);
+
         //progBarre.setVisible(false);
 
     }//GEN-LAST:event_btnACQActionPerformed
@@ -1681,7 +1695,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
             if ((Integer) arg == Constants.PROG_SUCCESS) {
 
-                voyant.setBackground(Color.GREEN);
+                //voyant.setBackground(Color.GREEN);
                 progBarre.setValue(100);
                 console.setText("Programmation terminée!");
             }
@@ -1731,7 +1745,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
             if ((Integer) arg == Constants.PROG_SUCCESS_ETAPE4) {
 
-                voyant.setBackground(Color.GREEN);
+                //voyant.setBackground(Color.GREEN);
                 progBarre.setString("Programmation terminée!");
                 progBarre.setStringPainted(true);
                 progBarre.setValue(100);
@@ -1880,9 +1894,48 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
             }
 
+            // traitement des résultats aux étapes de test
+            if (inputLine.trim().startsWith("-> TEST")) {
+
+                AttenteReponseOperateur = false;
+                String[] tab = inputLine.trim().split(":");
+                int etape = Integer.parseInt(tab[1]);
+                boolean result = Boolean.parseBoolean(tab[2]);
+                console.setText("Etape: " + etape);
+                if (etape < 18 || etape > 1) {
+
+                    testBarre.setValue(etape * 5);
+
+                }
+
+                if (etape == 12 || etape == 17) {
+
+                    AttenteReponseOperateur = true;
+                    clignottementVoyant();
+
+                }
+
+                if (etape == 18) {
+
+                    testBarre.setValue(100);
+                    testBarre.setString("Test terminé!");
+                    testBarre.setStringPainted(true);
+                    activerBtnAttenteACQ();
+                    voyantTestOK(true);
+
+                }
+
+                if (result) {
+
+                } else {
+
+                }
+
+            }
+
         } else {
 
-            if (inputLine.trim().startsWith("-> FIN TEST MANUEL")) {
+            if (inputLine.trim().startsWith("-> FIN TE ST MANUEL")) {
 
                 System.out.println("test manuel acquitté2");
                 messageConsole("FIN TEST MANUEL");
@@ -2291,4 +2344,21 @@ public class Interface extends javax.swing.JFrame implements Observer {
         }
     }
 
+    private void clignottementVoyant() {
+
+        while (AttenteReponseOperateur) {
+            voyant.setBackground(Color.ORANGE);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            voyant.setBackground(Color.YELLOW);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 }

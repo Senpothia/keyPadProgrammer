@@ -50,6 +50,10 @@ public class Constants {
 
     static Integer ERASE_SUCCESS = 50;
     static Integer ERASE_UNSUCCESS = 55;
+    
+    // Signalisation résultats des étapes de test
+    
+    
 
     //********************************************************************************************************
     // ERREURS TRACE1
