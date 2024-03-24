@@ -91,13 +91,10 @@ public class Interface extends javax.swing.JFrame implements Observer {
         progLocLabel.setOpaque(true);
         binaryLocLabel.setOpaque(true);
         bleLocLabel.setOpaque(true);
-
-        //activerBtnProgrammation(false);
         inhibBtn();
 
         aide.getContentPane().setBackground(new Color(247, 242, 208));
 
-        //List<JRadioButtonMenuItem> listePorts = new ArrayList<JRadioButtonMenuItem>();
         rechercherPortsComms();
 
         initialisation = initializer.getInit();
@@ -901,17 +898,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
                     try {
                         int comm = connecteur.program(hexLocation, bleLocation, envVariable, progLocation);
-
-                        /*
-                        comm = connecteur.envoyerData(Constants.AQC);
-                        Constants.tempo(1000);
-                        comm = connecteur.envoyerData(Constants.START);
-                        testActif = true;
-                        programmationActive = false;
-                        auto = true;
-                        voyantTestEnCours(true);
-                        activerBtnReponseOp(testActif);
-                         */
+                        System.out.println("Retour programmation. Code reçu: " + comm);
                         if (comm == -1) {
 
                             alerteRS232();
@@ -926,7 +913,19 @@ public class Interface extends javax.swing.JFrame implements Observer {
                             programmationActive = true;
 
                         }
+                        
+                        /*
+                        if (comm == -3) {
+                            System.out.println("Erreur programmation etape 1");
+                            console.setText("Erreur de programmation");
+                            voyant.setBackground(Color.red);
+                            //connecteur.envoyerData(Constants.ERR_PROG);
+                            programmationActive = true;
+                            montrerError("Vérifier que la carte est bien positionnée!", "Erreur de programmation");
 
+                        }
+                        */
+                        
                         if (comm == 1) {
 
                             console.setText("Programmation terminée!");
@@ -995,17 +994,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
             }
             console.setText("Résultat non conforme. Test terminé!");
             voyant.setBackground(Color.RED);
-            /*
-            btnEffacer.setText("Effacer");
-            btnEffacer.setBackground(Color.GRAY);
-            btnEffacer.setEnabled(false);
-            btnProg.setText("Programmer");
-            btnProg.setBackground(Color.GRAY);
-            btnProg.setEnabled(false);
-            btnTester.setText("ACQ");
-            btnTester.setBackground(Color.GRAY);
-            btnTester.setEnabled(true);
-             */
 
         }
 
@@ -1188,17 +1176,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
             btnConnexion.setEnabled(false);
             btnDeconnexion.setEnabled(true);
             connexionRS232Active = true;
-            /*
-            btnTester.setEnabled(true);
-            btnTester.setBackground(new Color(163, 194, 240));
-            btnTester.setOpaque(true);
-            btnProg.setEnabled(true);
-            btnProg.setBackground(new Color(163, 194, 240));
-            btnProg.setOpaque(true);
-            btnEffacer.setEnabled(true);
-            btnEffacer.setBackground(new Color(163, 194, 240));
-            btnEffacer.setOpaque(true);
-             */
             activerBtnAttenteLancement();
 
         } else {
@@ -1207,17 +1184,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
             console.setText("Tentative de connexion échouée");
             setStatusRS232(false);
 
-            /*
-            btnTester.setEnabled(false);
-            btnTester.setBackground(Color.GRAY);
-            btnTester.setOpaque(true);
-            btnProg.setEnabled(false);
-            btnProg.setBackground(Color.GRAY);
-            btnProg.setOpaque(true);
-            btnEffacer.setEnabled(false);
-            btnEffacer.setBackground(Color.GRAY);
-            btnEffacer.setOpaque(true);
-             */
         }
 
         setEnabledMenusConfiguration();
@@ -1234,13 +1200,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
             btnConnexion.setEnabled(true);
             btnDeconnexion.setEnabled(false);
             connexionRS232Active = false;
-            /*
-            btnTester.setEnabled(false);
-            btnTester.setBackground(Color.GRAY);
-            btnTester.setOpaque(true);
-            setEnabledMenusConfiguration();
-             */
-            //activerBtnProgrammation(false);
             inhibBtn();
 
         }
@@ -1305,16 +1264,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 try {
                     int comm = connecteur.program(hexLocation, bleLocation, envVariable, progLocation);
 
-                    /*
-                        comm = connecteur.envoyerData(Constants.AQC);
-                        Constants.tempo(1000);
-                        comm = connecteur.envoyerData(Constants.START);
-                        testActif = true;
-                        programmationActive = false;
-                        auto = true;
-                        voyantTestEnCours(true);
-                        activerBtnReponseOp(testActif);
-                     */
                     if (comm == -1) {
 
                         alerteRS232();
@@ -1326,13 +1275,13 @@ public class Interface extends javax.swing.JFrame implements Observer {
                         console.setText("Erreur de programmation");
                         voyant.setBackground(Color.red);
                         connecteur.envoyerData(Constants.ERR_PROG);
+                        activerBtnAttenteACQ();
                         programmationActive = true;
 
                     }
 
                     if (comm == 1) {
-                        
-                        
+
                         console.setText("Programmation terminée!");
                         // voyant.setBackground(Color.GREEN);
                         connecteur.envoyerData(Constants.END_PROG);
@@ -1348,7 +1297,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
                     }
 
-                    // programmationActive = true;
                 } catch (IOException ex) {
                     Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1385,17 +1333,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
         }
         console.setText("Résultat non conforme. Test terminé!");
         voyant.setBackground(Color.RED);
-        /*
-        btnEffacer.setText("Effacer");
-        btnEffacer.setBackground(Color.GRAY);
-        btnEffacer.setEnabled(false);
-        btnProg.setText("Programmer");
-        btnProg.setBackground(Color.GRAY);
-        btnProg.setEnabled(false);
-        btnTester.setText("ACQ");
-        btnTester.setBackground(Color.GRAY);
-        btnTester.setEnabled(true);
-         */
+
     }//GEN-LAST:event_btnNOKActionPerformed
 
     private void btnACQActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnACQActionPerformed
@@ -1421,7 +1359,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
         testBarre.setString("Test en attente de démarrage");
         testBarre.setStringPainted(true);
 
-        //progBarre.setVisible(false);
 
     }//GEN-LAST:event_btnACQActionPerformed
 
@@ -1552,17 +1489,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
         if (hexLocation == null) {
 
             console.setText("Le fichier binaire n'est pas défini!");
-            /*
-            btnEffacer.setEnabled(false);
-            btnEffacer.setBackground(Color.GRAY);
-            btnEffacer.setOpaque(true);
-            btnProg.setEnabled(false);
-            btnProg.setBackground(Color.GRAY);
-            btnProg.setOpaque(true);
-            btnTester.setEnabled(false);
-            btnTester.setBackground(Color.GRAY);
-            btnTester.setOpaque(true);
-             */
             voyant.setBackground(Color.GRAY);
             statutPGRM.setBackground(Color.RED);
             statutPGRM.setForeground(Color.RED);
@@ -1572,17 +1498,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
             if (bleLocation == null) {
 
                 console.setText("Le fichier BLE n'est pas défini!");
-                /*
-                btnEffacer.setEnabled(false);
-                btnEffacer.setBackground(Color.GRAY);
-                btnEffacer.setOpaque(true);
-                btnProg.setEnabled(false);
-                btnProg.setBackground(Color.GRAY);
-                btnProg.setOpaque(true);
-                btnTester.setEnabled(false);
-                btnTester.setBackground(Color.GRAY);
-                btnTester.setOpaque(true);
-                 */
                 voyant.setBackground(Color.GRAY);
                 statutPGRM.setBackground(Color.RED);
                 statutPGRM.setForeground(Color.RED);
@@ -1592,35 +1507,12 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 if (!envVariable && progLocation == null) {
 
                     console.setText("Repertoire programmateur non défini!");
-                    /*
-                    btnEffacer.setEnabled(false);
-                    btnEffacer.setBackground(Color.GRAY);
-                    btnEffacer.setOpaque(true);
-                    btnProg.setEnabled(false);
-                    btnProg.setBackground(Color.GRAY);
-                    btnProg.setOpaque(true);
-                    btnTester.setEnabled(false);
-                    btnTester.setBackground(Color.GRAY);
-                    btnTester.setOpaque(true);
-                    voyant.setBackground(Color.GRAY);
-                     */
                     statutPGRM.setBackground(Color.RED);
                     statutPGRM.setForeground(Color.RED);
 
                 } else {
 
                     console.setText("Paramètres de programmation définis. Vous pouvez commencer!");
-                    /*
-                    btnEffacer.setEnabled(true);
-                    btnEffacer.setBackground(new Color(163, 194, 240));
-                    btnEffacer.setOpaque(true);
-                    btnProg.setEnabled(true);
-                    btnProg.setBackground(new Color(163, 194, 240));
-                    btnProg.setOpaque(true);
-                    btnTester.setEnabled(true);
-                    btnTester.setBackground(new Color(163, 194, 240));
-                    btnTester.setOpaque(true);
-                     */
                     statutPGRM.setBackground(Color.GREEN);
                     statutPGRM.setForeground(Color.GREEN);
                     initializer.update("binaryLocation", hexLocation);
@@ -1645,12 +1537,10 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
             statutRs232.setBackground(Color.GREEN);
             activerBtnAttenteLancement();
-            // activerBtnProgrammation(true);
 
         } else {
 
             statutRs232.setBackground(Color.red);
-            //activerBtnProgrammation(false);
             inhibBtn();
 
         }
@@ -1721,7 +1611,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 voyant.setBackground(Color.YELLOW);
                 progBarre.setStringPainted(true);
                 progBarre.setString("Programmation en cours...");
-                progBarre.setValue(25);
+                progBarre.setValue(15);
                 console.setText("Programmation: étape 1 terminée!");
             }
 
@@ -1730,7 +1620,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 voyant.setBackground(Color.YELLOW);
                 progBarre.setStringPainted(true);
                 progBarre.setString("Programmation en cours...");
-                progBarre.setValue(50);
+                progBarre.setValue(70);
                 console.setText("Programmation: étape 2 terminée!");
             }
 
@@ -1739,7 +1629,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 voyant.setBackground(Color.YELLOW);
                 progBarre.setStringPainted(true);
                 progBarre.setString("Programmation en cours...");
-                progBarre.setValue(75);
+                progBarre.setValue(90);
                 console.setText("Programmation: étape 3 terminée!");
             }
 
@@ -1750,15 +1640,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 progBarre.setStringPainted(true);
                 progBarre.setValue(100);
                 console.setText("Programmation: étape 4 terminée! - Le test est en cours");
-                //activerBtnAcquittement(true);
 
-                /*
-                int comm = connecteur.envoyerData(Constants.AQC);
-                Constants.tempo(1000);
-                comm = connecteur.envoyerData(Constants.START);
-                testActif = true;
-                programmationActive = false;
-                 */
             }
 
             if ((Integer) arg == Constants.PROG_UNSUCCESS_ETAPE1) {
@@ -1767,6 +1649,8 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 progBarre.setString("Echec programmation!");
                 progBarre.setStringPainted(true);
                 console.setText("Programmation: échec étape 1!");
+                montrerError("Vérifier positionnement carte!", "Erreur de programmation");
+                activerBtnAttenteACQ();
             }
 
             if ((Integer) arg == Constants.PROG_UNSUCCESS_ETAPE2) {
@@ -1775,6 +1659,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 progBarre.setString("Echec programmation!");
                 progBarre.setStringPainted(true);
                 console.setText("Programmation: échec étape 2!");
+                activerBtnAttenteACQ();
             }
 
             if ((Integer) arg == Constants.PROG_UNSUCCESS_ETAPE3) {
@@ -1783,6 +1668,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 progBarre.setString("Echec programmation!");
                 progBarre.setStringPainted(true);
                 console.setText("Programmation: échec étape 3!");
+                activerBtnAttenteACQ();
             }
 
             if ((Integer) arg == Constants.PROG_UNSUCCESS_ETAPE4) {
@@ -1791,6 +1677,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 progBarre.setString("Echec programmation!");
                 progBarre.setStringPainted(true);
                 console.setText("Programmation: échec étape 4!");
+                activerBtnAttenteACQ();
             }
 
         } else {
@@ -1831,7 +1718,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
             if (inputLine.trim().startsWith("-> TEST CONFORME")) {
 
                 messageConsole("TEST CONFORME - EN ATTENTE ACQUITTEMENT");
-                //activerBtnAcquittement(true);
                 activerBtnAttenteACQ();
                 voyantTestOK(true);
 
@@ -1856,29 +1742,25 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 System.out.println("test manuel acquitté1");
                 messageConsole("FIN TEST MANUEL");
                 voyant.setBackground(Color.GRAY);
-                //activerBtnProgrammation(true);
                 inhibBtn();
 
             }
 
+            /*
             if (inputLine.trim().startsWith("-> ERREUR:")) {
 
                 System.out.println("Signalisation erreur!");
-                //testActif = false;
                 messageConsole(inputLine.trim());
                 activerBtnAttenteACQ();
                 voyantTestOK(false);
                 System.out.println("testActif  =" + testActif);
 
             }
-
+             */
             if (inputLine.trim().startsWith("-> PROGRAMMATION TERMINEE")) {
 
                 System.out.println("programmation terminée");
                 messageConsole(inputLine.trim());
-                //activerBtnProgrammation(true);
-                //activerBtnAcquittement(true);
-                //voyantTestEnCours(false);
                 System.out.println("testActif  =" + testActif);
 
             }
@@ -1887,7 +1769,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
                 System.out.println("effacement terminé");
                 messageConsole(inputLine.trim());
-                //activerBtnProgrammation(true);
                 activerBtnAttenteLancement();
                 voyantTestEnCours(false);
                 System.out.println("testActif  =" + testActif);
@@ -1901,16 +1782,28 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 String[] tab = inputLine.trim().split(":");
                 int etape = Integer.parseInt(tab[1]);
                 boolean result = Boolean.parseBoolean(tab[2]);
+                System.out.println("Etape: " + etape);
                 console.setText("Etape: " + etape);
+
                 if (etape < 18 || etape > 1) {
 
                     testBarre.setValue(etape * 5);
 
                 }
 
-                if (etape == 12 || etape == 17) {
+                if (etape == 12 || etape == 16) {
 
                     AttenteReponseOperateur = true;
+
+                    if (etape == 12) {
+
+                        console.setText("EN ATTENTE VALIDATION LEDS");
+                    }
+
+                    if (etape == 16) {
+
+                        console.setText("EN ATTENTE VALIDATION BLUETOOTH");
+                    }
                     clignottementVoyant();
 
                 }
@@ -1940,7 +1833,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 System.out.println("test manuel acquitté2");
                 messageConsole("FIN TEST MANUEL");
                 voyant.setBackground(Color.GRAY);
-                //activerBtnProgrammation(true);
                 activerBtnAttenteLancement();
 
             }
@@ -1950,7 +1842,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
             messageConsole("TEST ACQUITTE");
             voyant.setBackground(Color.GRAY);
-            //activerBtnProgrammation(true);
             activerBtnAttenteLancement();
 
         }
@@ -2177,10 +2068,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
         activerBtnTester(false);
         activerBtnProgrammer(false);
 
-        /*
-        testActif = false;
-        auto = true;
-         */
     }
 
     void activerBtnAttenteACQ() {
@@ -2193,10 +2080,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
         activerBtnTester(false);
         activerBtnProgrammer(false);
 
-        /*
-        testActif = false;
-        auto = true;
-         */
     }
 
     void activerBtnTestEnCours() {
@@ -2209,10 +2092,6 @@ public class Interface extends javax.swing.JFrame implements Observer {
         activerBtnTester(false);
         activerBtnProgrammer(false);
 
-        /*
-        testActif = true;
-        auto = true;
-         */
     }
 
     void inhibBtn() {
@@ -2224,10 +2103,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
         activerBtnNOK(false);
         activerBtnTester(false);
         activerBtnProgrammer(false);
-        /*
-        testActif = false;
-        auto = true;
-         */
+
     }
 
     // Fonctions d'activation des boutons
@@ -2347,7 +2223,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
     private void clignottementVoyant() {
 
         while (AttenteReponseOperateur) {
-            voyant.setBackground(Color.ORANGE);
+            voyant.setBackground(Color.MAGENTA);
             try {
                 Thread.sleep(500);
             } catch (InterruptedException ex) {

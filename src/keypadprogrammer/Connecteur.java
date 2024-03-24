@@ -252,14 +252,26 @@ public class Connecteur extends Observable {
             //  STARTFUS
             String commande1 = "STM32_Programmer_CLI.exe -c port=SWD -startFUS -log .\\logs\\trace1.log";
             Process startFUS = runtime.exec(commande1);
-            tempo(4000);  // 5000-> valeur validée
+            tempo(5000);  // 5000-> valeur validée
             System.out.println("Fin startFUS");
 
-            //int control1 = progController.find(".\\logs\\trace1.log", Constants.ERREURS_LOG1, null);
-            //System.out.println("code controle: " + control1);
-            // UPDATE
-            programmationCompleted(Constants.PROG_SUCCESS_ETAPE1);
+            int control1 = progController.find(".\\logs\\trace1.log", Constants.ERREURS_LOG1, null);
+            System.out.println("code controle 1: " + control1);
 
+            if (control1 == 1 || control1 == 0) {
+
+                programmationCompleted(Constants.PROG_SUCCESS_ETAPE1);
+
+            } else {
+
+                programmationCompleted(Constants.PROG_UNSUCCESS_ETAPE1);
+                System.out.println("retour code erreur etape 1");
+                return -3;
+
+            }
+
+            // UPDATE
+            //programmationCompleted(Constants.PROG_SUCCESS_ETAPE1);
             String commande2 = "STM32_Programmer_CLI.exe -c port=SWD -startFUS mode=UR -ob nSWboot0=0 nboot1=1 nboot0=1 -fwupgrade " + bleLocation + " 0x080CE000 firstinstall=0 -log .\\logs\\trace2.log";
             Process upgradeBLE = runtime.exec(commande2);
             tempo(35000);  // 40000-> valeur validée

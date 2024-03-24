@@ -50,17 +50,15 @@ public class Constants {
 
     static Integer ERASE_SUCCESS = 50;
     static Integer ERASE_UNSUCCESS = 55;
-    
-    // Signalisation résultats des étapes de test
-    
-    
 
+    // Signalisation résultats des étapes de test
     //********************************************************************************************************
     // ERREURS TRACE1
-    static String E1_LOG1 = "Error: FUS_STATE_ERR_UNKNOWN: Unknown error";
-    static String E2_LOG1 = "Error: Fus is not yet running, try again";
+    static String E1_LOG1 = "Error: No STM32 target found! ";
+    static String E2_LOG1 = "Error: FUS_STATE_ERR_UNKNOWN: Unknown error";
+    static String E3_LOG1 = "Error: Fus is not yet running, try again";
 
-    static String[] ERREURS_LOG1 = {E1_LOG1, E2_LOG1};
+    static String[] ERREURS_LOG1 = {E1_LOG1};
 
     // REQUIS TRACE1
     //********************************************************************************************************
@@ -89,8 +87,7 @@ public class Constants {
     static String[] REQUIS_LOG4 = {R1_LOG4, R2_LOG4};
 
     //********************************************************************************************************
-    
-      static void tempo(long duree) {
+    static void tempo(long duree) {
 
         try {
 
