@@ -1333,6 +1333,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
         }
         console.setText("Résultat non conforme. Test terminé!");
         voyant.setBackground(Color.RED);
+        //activerBtnAttenteACQ();
 
     }//GEN-LAST:event_btnNOKActionPerformed
 
@@ -1746,7 +1747,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
             }
 
-            /*
+            
             if (inputLine.trim().startsWith("-> ERREUR:")) {
 
                 System.out.println("Signalisation erreur!");
@@ -1756,7 +1757,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 System.out.println("testActif  =" + testActif);
 
             }
-             */
+            
             if (inputLine.trim().startsWith("-> PROGRAMMATION TERMINEE")) {
 
                 System.out.println("programmation terminée");
@@ -1800,7 +1801,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
                         console.setText("EN ATTENTE VALIDATION LEDS");
                     }
 
-                    if (etape == 16) {
+                    if (etape > 16) {
 
                         console.setText("EN ATTENTE VALIDATION BLUETOOTH");
                     }
@@ -1821,6 +1822,8 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 if (result) {
 
                 } else {
+                    
+                  
 
                 }
 

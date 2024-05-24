@@ -234,7 +234,8 @@ public class Connecteur extends Observable {
     }
 
     public int program(String hexLocation, String bleLocation, boolean envVariable, String programmerLocation) throws IOException {
-
+        
+       
         System.out.println("tranmission ordre relais 8");
         int com = envoyerData(Constants.PROG);
         programmationCompleted(Constants.PROG_START);
@@ -252,7 +253,7 @@ public class Connecteur extends Observable {
             //  STARTFUS
             String commande1 = "STM32_Programmer_CLI.exe -c port=SWD -startFUS -log .\\logs\\trace1.log";
             Process startFUS = runtime.exec(commande1);
-            tempo(5000);  // 5000-> valeur validée
+            tempo(10000);  // 5000-> valeur validée
             System.out.println("Fin startFUS");
 
             int control1 = progController.find(".\\logs\\trace1.log", Constants.ERREURS_LOG1, null);
@@ -272,7 +273,8 @@ public class Connecteur extends Observable {
 
             // UPDATE
             //programmationCompleted(Constants.PROG_SUCCESS_ETAPE1);
-            String commande2 = "STM32_Programmer_CLI.exe -c port=SWD -startFUS mode=UR -ob nSWboot0=0 nboot1=1 nboot0=1 -fwupgrade " + bleLocation + " 0x080CE000 firstinstall=0 -log .\\logs\\trace2.log";
+            //String commande2 = "STM32_Programmer_CLI.exe -c port=SWD -startFUS mode=UR -ob nSWboot0=0 nboot1=1 nboot0=1 -fwupgrade " + bleLocation + " 0x080CE000 firstinstall=0 -log .\\logs\\trace2.log";  // version avant 07/05/2024
+            String commande2 = "STM32_Programmer_CLI.exe -c port=SWD -startFUS mode=UR -ob nSWboot0=0 nboot1=1 nboot0=1 -fwupgrade " + bleLocation + " 0x080CE000 firstinstall=1 -log .\\logs\\trace2.log";  // version après 07/05/2024
             Process upgradeBLE = runtime.exec(commande2);
             tempo(35000);  // 40000-> valeur validée
             System.out.println("Fin updateBLE");
@@ -296,7 +298,7 @@ public class Connecteur extends Observable {
             tempo(3000); // 5000-> valeur validée
             System.out.println("Fin startStack");
 
-            int control3 = progController.find(".\\logs\\trace3.log", null, Constants.REQUIS_LOG3);
+            int control3 = progController.find(".\\logs\\trace3.log", Constants.ERREURS_LOG3, Constants.REQUIS_LOG3);
             System.out.println("codeControl 3: " + control3);
             if (control3 == 1) {
 
@@ -331,7 +333,9 @@ public class Connecteur extends Observable {
         } else {
 
         }
-
+        
+       
+        
         tempo(3000); // 5000 -> valeur validée
         programmationCompleted(Constants.PROG_SUCCESS);
         envoyerData(Constants.END_PROG);

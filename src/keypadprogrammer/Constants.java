@@ -71,6 +71,11 @@ public class Constants {
 
     //********************************************************************************************************
     // ERREURS TRACE3
+    
+     static String E1_LOG3 = "Error: FUS_STATE_ERR_UNKNOWN";
+     
+     static String[] ERREURS_LOG3 = {E1_LOG3};
+ 
     // REQUIS TRACE3
     static String R1_LOG3 = "Success with Time elapsed during Reconnect:";
     static String R2_LOG3 = "FusStartWS activated successfully";
