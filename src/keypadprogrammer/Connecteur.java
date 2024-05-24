@@ -333,9 +333,7 @@ public class Connecteur extends Observable {
         } else {
 
         }
-        
-       
-        
+         
         tempo(3000); // 5000 -> valeur validée
         programmationCompleted(Constants.PROG_SUCCESS);
         envoyerData(Constants.END_PROG);
