@@ -75,7 +75,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
         statutPGRM.setForeground(Color.RED);
         statutPGRM.setOpaque(true);
 
-        this.getContentPane().setBackground(new Color(83, 141, 163));
+        this.getContentPane().setBackground(new Color(191, 0, 255));
         voyant.setBackground(new Color(204, 136, 53));
         voyant.setForeground(Color.GRAY);
         voyant.setOpaque(true);
@@ -84,7 +84,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
         console.setForeground(Color.red);
         console.setFont(new Font("Serif", Font.PLAIN, 20));
 
-        paramsWin.getContentPane().setBackground(new Color(83, 141, 163));
+        paramsWin.getContentPane().setBackground(new Color(191, 0, 255));
         progLocLabel.setBackground(new Color(247, 242, 208));
         binaryLocLabel.setBackground(new Color(247, 242, 208));
         bleLocLabel.setBackground(new Color(247, 242, 208));
@@ -475,7 +475,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
         titre.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         titre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        titre.setText("PROGRAMMATION & TEST GALEO - MODULE 1");
+        titre.setText("PROGRAMMATION & TEST GALEO - MODULE 2");
         titre.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         btnProg.setBackground(new java.awt.Color(255, 255, 255));
