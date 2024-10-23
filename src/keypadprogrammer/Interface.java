@@ -36,6 +36,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
     private String bleLocation = null;
     private boolean envVariable = false;
     private boolean confirmationParams = false;
+    private String bleCode;
 
     Connecteur connecteur = getConnecteur();            // gére la connexion RS232
 
@@ -1385,6 +1386,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
         });
     }
 
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox EnvVarBox;
     private javax.swing.JLabel StatutRS232Lab;
@@ -1673,7 +1675,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
             System.out.println(inputLine);
             if (auto) {
 
-                console.setText(inputLine);
+                // console.setText(inputLine);
             }
 
             processRapport(inputLine);
@@ -1704,7 +1706,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
             if (inputLine.trim().startsWith("-> TEST CONFORME")) {
 
-                messageConsole("TEST CONFORME - EN ATTENTE ACQUITTEMENT");
+                messageConsole("TEST CONFORME -" + bleCode);
                 activerBtnAttenteACQ();
                 voyantTestOK(true);
 
@@ -1763,15 +1765,38 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
             }
 
+            if (inputLine.trim().startsWith("-> RESET")) {
+
+                System.out.println("reset system");
+                messageConsole(inputLine.trim());
+                resetSystem();
+                /*
+                activerBtnAttenteLancement();
+                voyantTestEnCours(false);
+                System.out.println("testActif  =" + testActif);
+                 */
+
+            }
+
             // traitement des résultats aux étapes de test
             if (inputLine.trim().startsWith("-> TEST")) {
 
                 AttenteReponseOperateur = false;
                 String[] tab = inputLine.trim().split(":");
                 int etape = Integer.parseInt(tab[1]);
-                boolean result = Boolean.parseBoolean(tab[2]);
+                boolean result = false;
+                System.out.println("tab[2]" + tab[2]);
+                if (tab[2].equals("1")) {
+
+                    result = true;
+                } else {
+
+                    result = false;
+                }
                 System.out.println("Etape: " + etape);
-                console.setText("Etape: " + etape);
+                if (etape != 18) {
+                    console.setText("Etape: " + etape);
+                }
 
                 if (etape < 18 || etape > 1) {
 
@@ -1779,7 +1804,7 @@ public class Interface extends javax.swing.JFrame implements Observer {
 
                 }
 
-                if (etape == 12 || etape == 16) {
+                if (etape == 12) {
 
                     AttenteReponseOperateur = true;
 
@@ -1788,10 +1813,12 @@ public class Interface extends javax.swing.JFrame implements Observer {
                         console.setText("EN ATTENTE VALIDATION LEDS");
                     }
 
+                    /*
                     if (etape > 16) {
 
                         console.setText("EN ATTENTE VALIDATION BLUETOOTH");
                     }
+                     */
                     clignottementVoyant();
 
                 }
@@ -1799,16 +1826,19 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 if (etape == 18) {
 
                     testBarre.setValue(100);
+
                     testBarre.setString("Test terminé!");
                     testBarre.setStringPainted(true);
+                    bleCode = tab[3];
+                    console.setText("BLE:" + bleCode.substring(1,18));
+                    if (result) {
+                        
+                           console.setText("BLE:" + bleCode.substring(1,18)+ " - PRESSEZ ACQ!");
+                    } else {
+
+                    }
                     activerBtnAttenteACQ();
                     voyantTestOK(true);
-
-                }
-
-                if (result) {
-
-                } else {
 
                 }
 
@@ -2228,5 +2258,21 @@ public class Interface extends javax.swing.JFrame implements Observer {
                 Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    private void resetSystem() {
+
+        System.out.println("reset system");
+
+        testActif = false;
+        console.setText("Système réinitialisé");
+        testParamsProg();
+        voyantTestEnCours(false);
+        progBarre.setValue(0);
+        progBarre.setString("En attente lancement de programmation");
+        progBarre.setStringPainted(true);
+        testBarre.setValue(0);
+        testBarre.setString("Test en attente de démarrage");
+        testBarre.setStringPainted(true);
     }
 }
